@@ -1,0 +1,3295 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Reeb.SqlOM</name>
+    </assembly>
+    <members>
+        <member name="T:Reeb.SqlOM.Render.ISqlOmRenderer">
+            <summary>
+            Defines methods common to all SqlOM renderers.
+            </summary>
+            <remarks>
+            Derive from <see cref="T:Reeb.SqlOM.Render.ISqlOmRenderer"/> when you wish to develop a brand new renderer. 
+            You can write 100% proprietery code for while implementing the interface methods but it is not advised.
+            Instead you can inherit the <see cref="T:Reeb.SqlOM.Render.SqlOmRenderer"/> class which implements 80-95% of your rendering functionality.
+            All renderers must return a string as their rendering result.
+            </remarks>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.ISqlOmRenderer.RenderSelect(Reeb.SqlOM.SelectQuery)">
+            <summary>
+            Renders a SELECT statement
+            </summary>
+            <param name="query">Query definition</param>
+            <returns>Generated SQL statement</returns>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.ISqlOmRenderer.RenderRowCount(Reeb.SqlOM.SelectQuery)">
+            <summary>
+            Renders a row count SELECT statement. 
+            </summary>
+            <param name="query">Query definition to count rows for</param>
+            <returns>Generated SQL statement</returns>
+            <remarks>
+            Renders a SQL statement which returns a result set with one row and one cell which contains the number of rows <paramref name="query"/> can generate. 
+            The generated statement will work nicely with <see cref="M:System.Data.IDbCommand.ExecuteScalar"/> method.
+            </remarks>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.ISqlOmRenderer.RenderPage(System.Int32,System.Int32,System.Int32,Reeb.SqlOM.SelectQuery)">
+            <summary>
+            Renders a paged SELECT statement
+            </summary>
+            <param name="pageIndex">The zero based index of the page to be returned</param>
+            <param name="pageSize">The size of a page</param>
+            <param name="totalRowCount">Total number of rows the query would yeild if not paged</param>
+            <param name="query">Query definition to apply paging on</param>
+            <returns>Generated SQL statement</returns>
+            <remarks>
+            Generating pagination SQL is different on different databases because every database offers different levels of support for such functioanality.
+            Some databases (SqlServer 2000) require the programmer to supply the total number of rows to produce a page. If your renderer does not use the totalRowCount parameter, please state so in your implementation documentation.
+            </remarks>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.ISqlOmRenderer.RenderUpdate(Reeb.SqlOM.UpdateQuery)">
+            <summary>
+            Renders an UPDATE statement
+            </summary>
+            <param name="query">UPDATE query definition</param>
+            <returns>Generated SQL statement</returns>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.ISqlOmRenderer.RenderInsert(Reeb.SqlOM.InsertQuery)">
+            <summary>
+            Renders an INSERT statement
+            </summary>
+            <param name="query">INSERT query definition</param>
+            <returns>Generated SQL statement</returns>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.ISqlOmRenderer.RenderDelete(Reeb.SqlOM.DeleteQuery)">
+            <summary>
+            Renders an DELETE statement
+            </summary>
+            <param name="query">DELETE query definition</param>
+            <returns>Generated SQL statement</returns>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.ISqlOmRenderer.RenderUnion(Reeb.SqlOM.SqlUnion)">
+            <summary>
+            Renders a UNION clause
+            </summary>
+            <param name="union">Union definition</param>
+            <returns>Generated SQL statement</returns>
+        </member>
+        <member name="P:Reeb.SqlOM.Render.ISqlOmRenderer.DateFormat">
+            <summary>
+            Sets or returns default date format for the database
+            </summary>
+            <remarks>
+            Set DateFormat property when your database is configured to use a different date format
+            then "yyyy-MM-dd HH:mm:ss". SqlServer and MySql are configured to this format by default.
+            Oracle's default date format is "dd-MMM-yy HH:mm:ss".
+            </remarks>
+        </member>
+        <member name="T:Reeb.SqlOM.Render.MySqlRenderer">
+            <summary>
+            Renderer for MySql
+            </summary>
+            <remarks>
+            Use MySqlRenderer to render SQL statements for MySql database.
+            This version of Sql.Net has been tested with MySql 4
+            </remarks>
+        </member>
+        <member name="T:Reeb.SqlOM.Render.SqlOmRenderer">
+            <summary>
+            Provides common implementation for ISqlOmRenderer
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.#ctor(System.Char,System.Char)">
+            <summary>
+            Creates a new SqlOmRenderer
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.RenderSelect(Reeb.SqlOM.SelectQuery)">
+            <summary>
+            Renders a SELECT statement
+            </summary>
+            <param name="query">Query definition</param>
+            <returns>Generated SQL statement</returns>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.RenderRowCount(Reeb.SqlOM.SelectQuery)">
+            <summary>
+            Renders a row count SELECT statement. 
+            </summary>
+            <param name="query">Query definition to count rows for</param>
+            <returns>Generated SQL statement</returns>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.RenderUpdate(Reeb.SqlOM.UpdateQuery)">
+            <summary>
+            Renders an UPDATE statement
+            </summary>
+            <param name="query">UPDATE query definition</param>
+            <returns>Generated SQL statement</returns>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.RenderInsert(Reeb.SqlOM.InsertQuery)">
+            <summary>
+            Renders an INSERT statement
+            </summary>
+            <param name="query">INSERT query definition</param>
+            <returns>Generated SQL statement</returns>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.RenderDelete(Reeb.SqlOM.DeleteQuery)">
+            <summary>
+            Renders an DELETE statement
+            </summary>
+            <param name="query">DELETE query definition</param>
+            <returns>Generated SQL statement</returns>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.RenderUnion(Reeb.SqlOM.SqlUnion)">
+            <summary>
+            Renders a UNION clause
+            </summary>
+            <param name="union">Union definition</param>
+            <returns>Generated SQL statement</returns>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.RenderPage(System.Int32,System.Int32,System.Int32,Reeb.SqlOM.SelectQuery)">
+            <summary>
+            Renders a SELECT statement which a result-set page
+            </summary>
+            <param name="pageIndex">The zero based index of the page to be returned</param>
+            <param name="pageSize">The size of a page</param>
+            <param name="totalRowCount">Total number of rows the query would yeild if not paged</param>
+            <param name="query">Query definition to apply paging on</param>
+            <returns>Generated SQL statement</returns>
+            <remarks>
+            To generate pagination SQL you must supply <paramref name="totalRowCount"/>.
+            To aquire the total number of rows use the <see cref="M:Reeb.SqlOM.Render.SqlOmRenderer.RenderRowCount(Reeb.SqlOM.SelectQuery)"/> method.
+            </remarks>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.Select(System.Text.StringBuilder,System.Boolean)">
+            <summary>
+            Renders a the beginning of a SELECT clause with an optional DISTINCT setting
+            </summary>
+            <param name="builder">Select statement string builder</param>
+            <param name="distinct">Turns on or off SQL distinct option</param>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.SelectColumns(System.Text.StringBuilder,Reeb.SqlOM.SelectColumnCollection)">
+            <summary>
+            Renders columns of SELECT clause
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.SelectColumn(System.Text.StringBuilder,Reeb.SqlOM.SelectColumn)">
+            <summary>
+            Renders a sinle select column
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.Coma(System.Text.StringBuilder)">
+            <summary>
+            Renders a separator between select columns
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.From(System.Text.StringBuilder)">
+            <summary>
+            Renders the begining of a FROM clause
+            </summary>
+            <param name="builder"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.FromClause(System.Text.StringBuilder,Reeb.SqlOM.FromClause,System.String)">
+            <summary>
+            Renders the terms of a from clause
+            </summary>
+            <param name="builder"></param>
+            <param name="fromClause"></param>
+            <param name="tableSpace">Common prefix for all tables in the clause</param>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.RenderFromTerm(System.Text.StringBuilder,Reeb.SqlOM.FromTerm,System.String)">
+            <summary>
+            Renders a single FROM term
+            </summary>
+            <param name="builder"></param>
+            <param name="table"></param>
+            <param name="tableSpace">Common prefix for all tables in the term</param>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.TableNamespace(System.Text.StringBuilder,System.String)">
+            <summary>
+            Renders the table namespace
+            </summary>
+            <param name="builder"></param>
+            <param name="ns"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.Where(System.Text.StringBuilder,Reeb.SqlOM.WhereClause)">
+            <summary>
+            Renders the begining of a WHERE statement
+            </summary>
+            <param name="builder"></param>
+            <param name="group"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.Having(System.Text.StringBuilder,Reeb.SqlOM.WhereClause)">
+            <summary>
+            Renders the begining of a HAVING statement
+            </summary>
+            <param name="builder"></param>
+            <param name="group"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.WhereClause(System.Text.StringBuilder,Reeb.SqlOM.WhereClause)">
+            <summary>
+            Recursivly renders a WhereClause
+            </summary>
+            <param name="builder"></param>
+            <param name="group"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.BitwiseAnd(System.Text.StringBuilder,Reeb.SqlOM.WhereTerm)">
+            <summary>
+            Renders bitwise and
+            </summary>
+            <param name="builder"></param>
+            <param name="term"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.WhereClause(System.Text.StringBuilder,Reeb.SqlOM.WhereTerm)">
+            <summary>
+            Renders a single WhereTerm
+            </summary>
+            <param name="builder"></param>
+            <param name="term"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.IfNull(System.Text.StringBuilder,Reeb.SqlOM.SqlExpression)">
+            <summary>
+            Renders IfNull SqlExpression
+            </summary>
+            <param name="builder"></param>
+            <param name="expr"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.Expression(System.Text.StringBuilder,Reeb.SqlOM.SqlExpression)">
+            <summary>
+            Renders SqlExpression
+            </summary>
+            <param name="builder"></param>
+            <param name="expr"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.Function(System.Text.StringBuilder,Reeb.SqlOM.SqlAggregationFunction,Reeb.SqlOM.SqlExpression)">
+            <summary>
+            Renders a SqlExpression of type Function 
+            </summary>
+            <param name="builder"></param>
+            <param name="func"></param>
+            <param name="param"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.Constant(System.Text.StringBuilder,Reeb.SqlOM.SqlConstant)">
+            <summary>
+            Renders a constant
+            </summary>
+            <param name="builder"></param>
+            <param name="expr"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.Operator(System.Text.StringBuilder,Reeb.SqlOM.CompareOperator)">
+            <summary>
+            Renders a comaprison operator
+            </summary>
+            <param name="builder"></param>
+            <param name="op"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.ConstantList(System.Text.StringBuilder,Reeb.SqlOM.SqlConstantCollection)">
+            <summary>
+            Renders a list of values
+            </summary>
+            <param name="builder"></param>
+            <param name="values"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.SqlEncode(System.String)">
+            <summary>
+            Encodes a textual string.
+            </summary>
+            <param name="val">Text to be encoded</param>
+            <returns>Encoded text</returns>
+            <remarks>All text string must be encoded before they are appended to a SQL statement.</remarks>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.RelationshipOperator(System.Text.StringBuilder,Reeb.SqlOM.WhereClauseRelationship)">
+            <summary>
+            Renders a relationship operator
+            </summary>
+            <param name="builder"></param>
+            <param name="relationship"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.GroupBy(System.Text.StringBuilder,Reeb.SqlOM.GroupByTermCollection)">
+            <summary>
+            Renders the begining of a GROUP BY statement.
+            </summary>
+            <param name="builder"></param>
+            <param name="groupByTerms"></param>
+            <remarks>If <paramref name="groupByTerms"/> has no items, nothing will be appended.</remarks>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.GroupByTerms(System.Text.StringBuilder,Reeb.SqlOM.GroupByTermCollection)">
+            <summary>
+            Renders GROUP BY terms 
+            </summary>
+            <param name="builder"></param>
+            <param name="groupByTerms"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.GroupByTerm(System.Text.StringBuilder,Reeb.SqlOM.GroupByTerm)">
+            <summary>
+            Renders a single GROUP BY term
+            </summary>
+            <param name="builder"></param>
+            <param name="term"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.OrderBy(System.Text.StringBuilder,Reeb.SqlOM.OrderByTermCollection)">
+            <summary>
+            Renders the begining of a ORDER BY statement.
+            </summary>
+            <param name="builder"></param>
+            <param name="orderByTerms"></param>
+            <remarks>If <paramref name="orderByTerms"/> has no items, nothing will be appended.</remarks>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.OrderByTerms(System.Text.StringBuilder,Reeb.SqlOM.OrderByTermCollection)">
+            <summary>
+            Renders ORDER BY terms
+            </summary>
+            <param name="builder"></param>
+            <param name="orderByTerms"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.OrderByTerm(System.Text.StringBuilder,Reeb.SqlOM.OrderByTerm)">
+            <summary>
+            Renders a single ORDER BY term
+            </summary>
+            <param name="builder"></param>
+            <param name="term"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.Identifier(System.Text.StringBuilder,System.String)">
+            <summary>
+            Renders an identifier name.
+            </summary>
+            <param name="builder"></param>
+            <param name="name">Identifier name</param>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.QualifiedIdentifier(System.Text.StringBuilder,System.String,System.String)">
+            <summary>
+            Renders a fully qualified identifer.
+            </summary>
+            <param name="builder">Select statement string builder</param>
+            <param name="qnamespace">Identifier namespace</param>
+            <param name="name">Identifier name</param>
+            <remarks>
+            <see cref="M:Reeb.SqlOM.Render.SqlOmRenderer.QualifiedIdentifier(System.Text.StringBuilder,System.String,System.String)"/> is usually to render database fields with optional table alias prefixes.
+            <paramref name="name"/> is a mandatory parameter while <paramref name="qnamespace"/> is optional.
+            If <paramref name="qnamespace"/> is null, identifier will be rendered without a namespace (aka table alias)
+            </remarks>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.Update(System.Text.StringBuilder,System.String)">
+            <summary>
+            Renders a the beginning of an UPDATE clause with the table name
+            </summary>
+            <param name="builder"></param>
+            <param name="tableName">Name of the table to be updated</param>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.UpdateTerms(System.Text.StringBuilder,Reeb.SqlOM.UpdateTermCollection)">
+            <summary>
+            Renders update phrases
+            </summary>
+            <param name="builder"></param>
+            <param name="terms"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.UpdateTerm(System.Text.StringBuilder,Reeb.SqlOM.UpdateTerm)">
+            <summary>
+            Render a single update phrase
+            </summary>
+            <param name="builder"></param>
+            <param name="term"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.UpdateStatement(Reeb.SqlOM.UpdateQuery)">
+            <summary>
+            Renders the whole UPDATE statement using ANSI SQL standard
+            </summary>
+            <param name="query"></param>
+            <returns>The rendered SQL string</returns>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.Insert(System.Text.StringBuilder,System.String)">
+            <summary>
+            Render the beginning of an INSERT statement with table name
+            </summary>
+            <param name="builder"></param>
+            <param name="tableName"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.InsertColumns(System.Text.StringBuilder,Reeb.SqlOM.UpdateTermCollection)">
+            <summary>
+            Render the list of columns which are to be inserted.
+            </summary>
+            <param name="builder"></param>
+            <param name="terms"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.InsertColumn(System.Text.StringBuilder,Reeb.SqlOM.UpdateTerm)">
+            <summary>
+            Render a single column name in an INSERT statement
+            </summary>
+            <param name="builder"></param>
+            <param name="term"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.InsertValues(System.Text.StringBuilder,Reeb.SqlOM.UpdateTermCollection)">
+            <summary>
+            Render the values of an INSERT statement
+            </summary>
+            <param name="builder"></param>
+            <param name="terms"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.InsertValue(System.Text.StringBuilder,Reeb.SqlOM.UpdateTerm)">
+            <summary>
+            Render a single INSERT value
+            </summary>
+            <param name="builder"></param>
+            <param name="term"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.InsertStatement(Reeb.SqlOM.InsertQuery)">
+            <summary>
+            Render the whole INSERT statement in ANSI standard
+            </summary>
+            <param name="query"></param>
+            <returns>The rendered SQL INSERT statement</returns>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.Delete(System.Text.StringBuilder,System.String)">
+            <summary>
+            Render the beginning of a DELETE statement
+            </summary>
+            <param name="builder"></param>
+            <param name="tableName"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.DeleteStatement(Reeb.SqlOM.DeleteQuery)">
+            <summary>
+            Render the whole DELETE statement in ANSI SQL standard
+            </summary>
+            <param name="query"></param>
+            <returns>The rendered SQL statement</returns>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.CaseClause(System.Text.StringBuilder,Reeb.SqlOM.CaseClause)">
+            <summary>
+            Renders a CaseCluase
+            </summary>
+            <param name="builder"></param>
+            <param name="clause"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlOmRenderer.CaseTerm(System.Text.StringBuilder,Reeb.SqlOM.CaseTerm)">
+            <summary>
+            Renders a CaseTerm
+            </summary>
+            <param name="builder"></param>
+            <param name="term"></param>
+        </member>
+        <member name="P:Reeb.SqlOM.Render.SqlOmRenderer.DateFormat">
+            <summary>
+            Gets or sets a date format string
+            </summary>
+            <remarks>
+            Use <see cref="P:Reeb.SqlOM.Render.SqlOmRenderer.DateFormat"/> to specify how date values should be formatted
+            in order to be properly parsed by your database.
+            Specific renderers set this property to the appliciable default value, so you
+            only need to change this if your database is configured to use other then default date format.
+            <para>
+            DateFormat will be used to format <see cref="T:System.DateTime"/> values which have the Hour, Minute, Second and Milisecond properties set to 0.
+            Otherwise, <see cref="P:Reeb.SqlOM.Render.SqlOmRenderer.DateTimeFormat"/> will be used.
+            </para>
+            </remarks>
+        </member>
+        <member name="P:Reeb.SqlOM.Render.SqlOmRenderer.DateTimeFormat">
+            <summary>
+            Gets or sets a date-time format string
+            </summary>
+            <remarks>
+            Use <see cref="P:Reeb.SqlOM.Render.SqlOmRenderer.DateTimeFormat"/> to specify how timestamp values should be formatted
+            in order to be properly parsed by your database.
+            Specific renderers set this property to the appliciable default value, so you
+            only need to change this if your database is configured to use other then default date format.
+            </remarks>
+        </member>
+        <member name="P:Reeb.SqlOM.Render.SqlOmRenderer.UpperCaseIdentifiers">
+            <summary>
+            Specifies weather all identifiers should be converted to upper case while rendering
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.MySqlRenderer.#ctor">
+            <summary>
+            Creates a new MySqlRenderer
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.MySqlRenderer.IfNull(System.Text.StringBuilder,Reeb.SqlOM.SqlExpression)">
+            <summary>
+            Renders IfNull SqlExpression
+            </summary>
+            <param name="builder"></param>
+            <param name="expr"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.MySqlRenderer.RenderSelect(Reeb.SqlOM.SelectQuery)">
+            <summary>
+            Renders a SELECT statement
+            </summary>
+            <param name="query">Query definition</param>
+            <returns>Generated SQL statement</returns>
+            <remarks>MySql 4.1 does not support GroupByWithCube option. If a query has <see cref="P:Reeb.SqlOM.SelectQuery.GroupByWithCube"/> set an <see cref="T:Reeb.SqlOM.InvalidQueryException"/> exception will be thrown. </remarks>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.MySqlRenderer.RenderRowCount(Reeb.SqlOM.SelectQuery)">
+            <summary>
+            Renders a row count SELECT statement. 
+            </summary>
+            <param name="query">Query definition to count rows for</param>
+            <returns>Generated SQL statement</returns>
+            <remarks>
+            Renders a SQL statement which returns a result set with one row and one cell which contains the number of rows <paramref name="query"/> can generate. 
+            The generated statement will work nicely with <see cref="M:System.Data.IDbCommand.ExecuteScalar"/> method.
+            </remarks>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.MySqlRenderer.RenderPage(System.Int32,System.Int32,System.Int32,Reeb.SqlOM.SelectQuery)">
+            <summary>
+            Renders a SELECT statement which a result-set page
+            </summary>
+            <param name="pageIndex">The zero based index of the page to be returned</param>
+            <param name="pageSize">The size of a page</param>
+            <param name="totalRowCount">Total number of rows the query would yeild if not paged</param>
+            <param name="query">Query definition to apply paging on</param>
+            <returns>Generated SQL statement</returns>
+            <remarks>
+            Parameter <paramref name="totalRowCount"/> is ignored.
+            </remarks>
+        </member>
+        <member name="T:Reeb.SqlOM.Render.OracleRenderer">
+            <summary>
+            Renderer for Oracle
+            </summary>
+            <remarks>
+            Use OracleRenderer to render SQL statements for Oracle database.
+            This version of Sql.Net has been tested with Oracle 9i.
+            </remarks>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.OracleRenderer.#ctor">
+            <summary>
+            Creates a new instance of OracleRenderer
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.OracleRenderer.IfNull(System.Text.StringBuilder,Reeb.SqlOM.SqlExpression)">
+            <summary>
+            Renders IfNull SqlExpression
+            </summary>
+            <param name="builder"></param>
+            <param name="expr"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.OracleRenderer.BitwiseAnd(System.Text.StringBuilder,Reeb.SqlOM.WhereTerm)">
+            <summary>
+            Renders bitwise and
+            </summary>
+            <param name="builder"></param>
+            <param name="term"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.OracleRenderer.RenderSelect(Reeb.SqlOM.SelectQuery)">
+            <summary>
+            Renders a SELECT statement
+            </summary>
+            <param name="query">Query definition</param>
+            <returns>Generated SQL statement</returns>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.OracleRenderer.RenderRowCount(Reeb.SqlOM.SelectQuery)">
+            <summary>
+            Renders a row count SELECT statement. 
+            </summary>
+            <param name="query">Query definition to count rows for</param>
+            <returns>Generated SQL statement</returns>
+            <remarks>
+            Renders a SQL statement which returns a result set with one row and one cell which contains the number of rows <paramref name="query"/> can generate. 
+            The generated statement will work nicely with <see cref="M:System.Data.IDbCommand.ExecuteScalar"/> method.
+            </remarks>
+        </member>
+        <member name="P:Reeb.SqlOM.Render.OracleRenderer.UpperCaseIdentifiers">
+            <summary>
+            Returns true. 
+            </summary>
+        </member>
+        <member name="T:Reeb.SqlOM.Render.SqlServerRenderer">
+            <summary>
+            Renderer for SqlServer
+            </summary>
+            <remarks>
+            Use SqlServerRenderer to render SQL statements for Microsoft SQL Server database.
+            This version of Sql.Net has been tested with MSSQL 2000
+            </remarks>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlServerRenderer.#ctor">
+            <summary>
+            Creates a new SqlServerRenderer
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlServerRenderer.IfNull(System.Text.StringBuilder,Reeb.SqlOM.SqlExpression)">
+            <summary>
+            Renders IfNull SqlExpression
+            </summary>
+            <param name="builder"></param>
+            <param name="expr"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlServerRenderer.RenderSelect(Reeb.SqlOM.SelectQuery)">
+            <summary>
+            Renders a SELECT statement
+            </summary>
+            <param name="query">Query definition</param>
+            <returns>Generated SQL statement</returns>
+        </member>
+        <member name="M:Reeb.SqlOM.Render.SqlServerRenderer.RenderRowCount(Reeb.SqlOM.SelectQuery)">
+            <summary>
+            Renders a row count SELECT statement. 
+            </summary>
+            <param name="query">Query definition to count rows for</param>
+            <returns>Generated SQL statement</returns>
+            <remarks>
+            Renders a SQL statement which returns a result set with one row and one cell which contains the number of rows <paramref name="query"/> can generate. 
+            The generated statement will work nicely with <see cref="M:System.Data.IDbCommand.ExecuteScalar"/> method.
+            </remarks>
+        </member>
+        <member name="T:Reeb.SqlOM.CaseClause">
+            <summary>
+            Encapsulates SQL CASE clause
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.CaseClause.#ctor">
+            <summary>
+            Creates a new CaseClause
+            </summary>
+        </member>
+        <member name="P:Reeb.SqlOM.CaseClause.Terms">
+            <summary>
+            Gets the <see cref="T:Reeb.SqlOM.CaseTerm"/> collection for this CaseClause
+            </summary>
+        </member>
+        <member name="P:Reeb.SqlOM.CaseClause.ElseValue">
+            <summary>
+            Gets or sets the value CASE default value
+            </summary>
+        </member>
+        <member name="T:Reeb.SqlOM.CaseTerm">
+            <summary>
+            Encapsulates a single WHEN ... THEN ... statement
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.CaseTerm.#ctor(Reeb.SqlOM.WhereClause,Reeb.SqlOM.SqlExpression)">
+            <summary>
+            Creates a new CaseTerm
+            </summary>
+            <param name="condition">Condition for the WHEN clause</param>
+            <param name="val">Value for the THEN clause</param>
+        </member>
+        <member name="T:Reeb.SqlOM.CaseTermCollection">
+            <summary>
+            A collection of elements of type CaseTerm
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.CaseTermCollection.#ctor">
+            <summary>
+            Initializes a new empty instance of the CaseTermCollection class.
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.CaseTermCollection.#ctor(Reeb.SqlOM.CaseTerm[])">
+            <summary>
+            Initializes a new instance of the CaseTermCollection class, containing elements
+            copied from an array.
+            </summary>
+            <param name="items">
+            The array whose elements are to be added to the new CaseTermCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.CaseTermCollection.#ctor(Reeb.SqlOM.CaseTermCollection)">
+            <summary>
+            Initializes a new instance of the CaseTermCollection class, containing elements
+            copied from another instance of CaseTermCollection
+            </summary>
+            <param name="items">
+            The CaseTermCollection whose elements are to be added to the new CaseTermCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.CaseTermCollection.AddRange(Reeb.SqlOM.CaseTerm[])">
+            <summary>
+            Adds the elements of an array to the end of this CaseTermCollection.
+            </summary>
+            <param name="items">
+            The array whose elements are to be added to the end of this CaseTermCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.CaseTermCollection.AddRange(Reeb.SqlOM.CaseTermCollection)">
+            <summary>
+            Adds the elements of another CaseTermCollection to the end of this CaseTermCollection.
+            </summary>
+            <param name="items">
+            The CaseTermCollection whose elements are to be added to the end of this CaseTermCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.CaseTermCollection.Add(Reeb.SqlOM.CaseTerm)">
+            <summary>
+            Adds an instance of type CaseTerm to the end of this CaseTermCollection.
+            </summary>
+            <param name="value">
+            The CaseTerm to be added to the end of this CaseTermCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.CaseTermCollection.Contains(Reeb.SqlOM.CaseTerm)">
+            <summary>
+            Determines whether a specfic CaseTerm value is in this CaseTermCollection.
+            </summary>
+            <param name="value">
+            The CaseTerm value to locate in this CaseTermCollection.
+            </param>
+            <returns>
+            true if value is found in this CaseTermCollection;
+            false otherwise.
+            </returns>
+        </member>
+        <member name="M:Reeb.SqlOM.CaseTermCollection.IndexOf(Reeb.SqlOM.CaseTerm)">
+            <summary>
+            Return the zero-based index of the first occurrence of a specific value
+            in this CaseTermCollection
+            </summary>
+            <param name="value">
+            The CaseTerm value to locate in the CaseTermCollection.
+            </param>
+            <returns>
+            The zero-based index of the first occurrence of the _ELEMENT value if found;
+            -1 otherwise.
+            </returns>
+        </member>
+        <member name="M:Reeb.SqlOM.CaseTermCollection.Insert(System.Int32,Reeb.SqlOM.CaseTerm)">
+            <summary>
+            Inserts an element into the CaseTermCollection at the specified index
+            </summary>
+            <param name="index">
+            The index at which the CaseTerm is to be inserted.
+            </param>
+            <param name="value">
+            The CaseTerm to insert.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.CaseTermCollection.Remove(Reeb.SqlOM.CaseTerm)">
+            <summary>
+            Removes the first occurrence of a specific CaseTerm from this CaseTermCollection.
+            </summary>
+            <param name="value">
+            The CaseTerm value to remove from this CaseTermCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.CaseTermCollection.GetEnumerator">
+            <summary>
+            Returns an enumerator that can iterate through the elements of this CaseTermCollection.
+            </summary>
+            <returns>
+            An object that implements System.Collections.IEnumerator.
+            </returns>        
+        </member>
+        <member name="P:Reeb.SqlOM.CaseTermCollection.Item(System.Int32)">
+            <summary>
+            Gets or sets the CaseTerm at the given index in this CaseTermCollection.
+            </summary>
+        </member>
+        <member name="T:Reeb.SqlOM.CaseTermCollection.Enumerator">
+            <summary>
+            Type-specific enumeration class, used by CaseTermCollection.GetEnumerator.
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.CaseTermCollection.Enumerator.#ctor(Reeb.SqlOM.CaseTermCollection)">
+            <summary>
+            
+            </summary>
+            <param name="collection"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.CaseTermCollection.Enumerator.MoveNext">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Reeb.SqlOM.CaseTermCollection.Enumerator.Reset">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Reeb.SqlOM.CaseTermCollection.Enumerator.Current">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Reeb.SqlOM.CaseTermCollection.Enumerator.System#Collections#IEnumerator#Current">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Reeb.SqlOM.DeleteQuery">
+            <summary>
+            Encapsulates a SQL DELETE statement
+            </summary>
+            <remarks>
+            Use DeleteQuery to delete a row in database table.
+            Set <see cref="P:Reeb.SqlOM.DeleteQuery.TableName"/> to the table you would like to delete rows from and use
+            <see cref="P:Reeb.SqlOM.DeleteQuery.WhereClause"/> to specify which rows are to be deleted.
+            </remarks>
+            <example>
+            <code>
+            DeleteQuery query = new DeleteQuery("products");
+            query.WhereClause.Terms.Add(WhereTerm.CreateCompare(SqlExpression.Field("productId"), SqlExpression.Number(999), CompareOperator.Equal));
+            RenderDelete(query);
+            </code>
+            </example>
+        </member>
+        <member name="M:Reeb.SqlOM.DeleteQuery.#ctor">
+            <summary>
+            Creates a DeleteQuery
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.DeleteQuery.#ctor(System.String)">
+            <summary>
+            Creates a DeleteQuery
+            </summary>
+            <param name="tableName">Name of the table records are to be deleted from</param>
+        </member>
+        <member name="M:Reeb.SqlOM.DeleteQuery.Validate">
+            <summary>
+            Validates DeleteQuery
+            </summary>
+        </member>
+        <member name="P:Reeb.SqlOM.DeleteQuery.WhereClause">
+            <summary>
+            Specifies which rows are to be deleted
+            </summary>
+        </member>
+        <member name="P:Reeb.SqlOM.DeleteQuery.TableName">
+            <summary>
+            Gets or set the name of a table records are to be deleted from
+            </summary>
+        </member>
+        <member name="T:Reeb.SqlOM.InvalidQueryException">
+            <summary>
+            InvalidQueryException exception can be thrown when the renderer decides that a query is invalid or incompatible with the target database.
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.InvalidQueryException.#ctor(System.String)">
+            <summary>
+            Creates a new InvalidQueryException
+            </summary>
+            <param name="text">Text of the exception</param>
+        </member>
+        <member name="T:Reeb.SqlOM.JoinType">
+            <summary>
+            Specifies what kind of join should be rendered
+            </summary>
+        </member>
+        <member name="F:Reeb.SqlOM.JoinType.Inner">
+            <summary>Inner Join</summary>
+        </member>
+        <member name="F:Reeb.SqlOM.JoinType.Left">
+            <summary>Left Outer Join</summary>
+        </member>
+        <member name="F:Reeb.SqlOM.JoinType.Right">
+            <summary>Right Outer Join</summary>
+        </member>
+        <member name="F:Reeb.SqlOM.JoinType.Full">
+            <summary>Full Join</summary>
+        </member>
+        <member name="F:Reeb.SqlOM.JoinType.Cross">
+            <summary>Cross Join</summary>
+        </member>
+        <member name="T:Reeb.SqlOM.Join">
+            <summary>
+            Represnts a Join between two tables.
+            </summary>
+        </member>
+        <member name="T:Reeb.SqlOM.FromClause">
+            <summary>
+            Represents the FROM clause of a select statement
+            </summary>
+            <remarks>
+            FromClause consists of a base table set by the <see cref="P:Reeb.SqlOM.FromClause.BaseTable">BaseTable</see> property
+            and optional joins defined using the <see cref="M:Reeb.SqlOM.FromClause.Join(Reeb.SqlOM.JoinType,Reeb.SqlOM.FromTerm,Reeb.SqlOM.FromTerm,System.String,System.String)">Join</see> method.
+            <para>
+            SqlOM supports inner, outer and cross joins. 
+            Inner join between two tables returns only rows which exist in both tables.
+            Outer (Left, Right and Full) joins return rows when at least one of the tables has a matching row. 
+            Left outer joins returns all rows from the left table and while the missing rows from the right are filled with nulls.
+            Right outer join is the opposite of left. Full outer join returns all the rows from the left and the right tables while the missing rows from the opposite table are filled with nulls.
+            Cross join does not match any keys and returns the cartesian product of both tables.
+            For more information about joins consult SQL documentation.
+            </para>	
+            </remarks>
+        </member>
+        <member name="M:Reeb.SqlOM.FromClause.TermExists(System.String)">
+            <summary>
+            Checks if a term with the specified RefName already exists in the FromClause.
+            </summary>
+            <param name="alias">The name of the term to be checked.</param>
+            <returns>true if the term exists or false otherwise</returns>
+            <remarks>
+            TermExists matches <paramref name="alias">alias</paramref> to <see cref="P:Reeb.SqlOM.FromTerm.RefName">RefName</see> of all participating FromTerms.
+            </remarks>
+        </member>
+        <member name="M:Reeb.SqlOM.FromClause.Join(Reeb.SqlOM.JoinType,Reeb.SqlOM.FromTerm,Reeb.SqlOM.FromTerm,System.String,System.String)">
+            <overloads>Use the following methods to define a join between two FromTerms.</overloads>
+            <summary>
+            Joins two tables using on a single join condition
+            </summary>
+            <param name="type">The type of join to be created.</param>
+            <param name="leftTable">The left table</param>
+            <param name="rightTable">The right table</param>
+            <param name="leftField">Name of the field in the left table to join on</param>
+            <param name="rightField">Name of the field in the right table to join on</param>
+            <example>
+            <code>
+            query.FromClause.Join(JoinType.Left, tCustomers, tOrders, "customerId", "customerId");
+            </code>
+            </example>
+        </member>
+        <member name="M:Reeb.SqlOM.FromClause.Join(Reeb.SqlOM.JoinType,Reeb.SqlOM.FromTerm,Reeb.SqlOM.FromTerm)">
+            <summary>
+            Creates an uncoditional join
+            </summary>
+            <param name="type">Must be JoinType.CrossJoin</param>
+            <param name="leftTable"></param>
+            <param name="rightTable"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.FromClause.Join(Reeb.SqlOM.JoinType,Reeb.SqlOM.FromTerm,Reeb.SqlOM.FromTerm,Reeb.SqlOM.JoinCondition)">
+            <summary>
+            Joins two tables using on a single join condition
+            </summary>
+            <param name="type">The type of join to be created.</param>
+            <param name="leftTable">The left table</param>
+            <param name="rightTable">The right table</param>
+            <param name="cond">Equality condition to be applied on the join</param>
+            <remarks>
+            This overload is used to create the most common type of join, when two tables
+            are joined on a single equality condition.
+            </remarks>
+            <example>
+            <code>
+            query.FromClause.Join(JoinType.Inner, tCustomers, tOrders, new JoinCondition("customerId", "customerId"));
+            </code>
+            </example>
+        </member>
+        <member name="M:Reeb.SqlOM.FromClause.Join(Reeb.SqlOM.JoinType,Reeb.SqlOM.FromTerm,Reeb.SqlOM.FromTerm,Reeb.SqlOM.JoinCondition,Reeb.SqlOM.JoinCondition)">
+            <summary>
+            Joins two tables using on a double join condition
+            </summary>
+            <param name="type">The type of join to be created.</param>
+            <param name="leftTable">The left table</param>
+            <param name="rightTable">The right table</param>
+            <param name="cond1">First equality condition to be applied on the join</param>
+            <param name="cond2">Second equality condition to be applied on the join</param>
+            <remarks>
+            A logical AND will be applied on <paramref name="cond1"/> and <paramref name="cond2"/>.
+            Schematically, the resulting SQL will be ... x join y on (cond1 and cond2) ...
+            </remarks>
+        </member>
+        <member name="M:Reeb.SqlOM.FromClause.Join(Reeb.SqlOM.JoinType,Reeb.SqlOM.FromTerm,Reeb.SqlOM.FromTerm,Reeb.SqlOM.JoinCondition,Reeb.SqlOM.JoinCondition,Reeb.SqlOM.JoinCondition)">
+            <summary>
+            Joins two tables using on a triple join condition
+            </summary>
+            <param name="type">The type of join to be created.</param>
+            <param name="leftTable">The left table</param>
+            <param name="rightTable">The right table</param>
+            <param name="cond1">First equality condition to be applied on the join</param>
+            <param name="cond2">First equality condition to be applied on the join</param>
+            <param name="cond3">First equality condition to be applied on the join</param>
+            <remarks>
+            A logical AND will be applied on all conditions.
+            Schematically, the resulting SQL will be ... x join y on (cond1 and cond2 and cond3) ...
+            </remarks>
+        </member>
+        <member name="M:Reeb.SqlOM.FromClause.Join(Reeb.SqlOM.JoinType,Reeb.SqlOM.FromTerm,Reeb.SqlOM.FromTerm,Reeb.SqlOM.JoinCondition[])">
+            <summary>
+            Joins two tables using on an array join condition
+            </summary>
+            <param name="type">The type of join to be created.</param>
+            <param name="leftTable">The left table</param>
+            <param name="rightTable">The right table</param>
+            <param name="conditions">An array of equality condition to be applied on the join</param>
+            <remarks>
+            A logical AND will be applied on the conditions.
+            Schematically, the resulting SQL will be ... x join y on (cond1 and cond2 and cond3 and ... and condN) ...
+            </remarks>
+        </member>
+        <member name="M:Reeb.SqlOM.FromClause.Join(Reeb.SqlOM.JoinType,Reeb.SqlOM.FromTerm,Reeb.SqlOM.FromTerm,Reeb.SqlOM.WhereClause)">
+            <summary>
+            Joins two tables using on an arbitrary join condition
+            </summary>
+            <param name="type">The type of join to be created.</param>
+            <param name="leftTable">The left table</param>
+            <param name="rightTable">The right table</param>
+            <param name="conditions">Specifies how the join should be performed</param>
+            <remarks>
+            Use this overload to create complex join conditions. 
+            Note that not all <see cref="T:Reeb.SqlOM.WhereClause"/> operators and expressions are supported in joins.
+            </remarks>
+            <example>
+            WhereClause condition = new WhereClause(WhereClauseRelationship.Or);
+            condition.Terms.Add(WhereTerm.CreateCompare(SqlExpression.Field("productId", tOrders), SqlExpression.Field("productId", tProducts), CompareOperator.Equal));
+            condition.Terms.Add(WhereTerm.CreateCompare(SqlExpression.Field("productName", tOrders), SqlExpression.Field("productName", tProducts), CompareOperator.Equal));
+            query.FromClause.Join(JoinType.Left, tOrders, tProducts, condition);
+            </example>
+        </member>
+        <member name="M:Reeb.SqlOM.FromClause.Clone">
+            <summary>
+            Creates a clone of this FromClause
+            </summary>
+            <returns>A new FromClause which exactly the same as the current one.</returns>
+        </member>
+        <member name="P:Reeb.SqlOM.FromClause.BaseTable">
+            <summary>
+            Gets or sets the base table for the FromClause
+            </summary>
+            <remarks>
+            The base table begins the serie of joins. 
+            If no joins are specified for the query the base table is the only table in the select statement.
+            BaseTable must be set before <see cref="T:Reeb.SqlOM.SelectQuery">SelectQuery</see> can be rendered.
+            </remarks>
+        </member>
+        <member name="P:Reeb.SqlOM.FromClause.Joins">
+            <summary>
+            Gets the joins for this FromClause
+            </summary>
+            <remarks>
+            Do not use this property to modify a FromClause. Use the <see cref="M:Reeb.SqlOM.FromClause.Join(Reeb.SqlOM.JoinType,Reeb.SqlOM.FromTerm,Reeb.SqlOM.FromTerm,System.String,System.String)">Join</see> method instead.
+            </remarks>
+        </member>
+        <member name="P:Reeb.SqlOM.FromClause.IsEmpty">
+            <summary>
+            Returns true if this FromClause has no terms at all
+            </summary>
+        </member>
+        <member name="T:Reeb.SqlOM.FromTermType">
+            <summary>
+            Specifies the type of a FromTerm
+            </summary>
+        </member>
+        <member name="F:Reeb.SqlOM.FromTermType.Table">
+            <summary>The FromTerm designates a database table or view</summary>
+        </member>
+        <member name="F:Reeb.SqlOM.FromTermType.SubQuery">
+            <summary>The FromTerm designates a sub-query. Not all databases support sub-queries.</summary>
+        </member>
+        <member name="T:Reeb.SqlOM.FromTerm">
+            <summary>
+            Represents one term in the the FROM clause of a select statement.
+            </summary>
+            <remarks>
+            A from term can be either a table, table reference or a subquery.
+            subqueries. <see cref="M:Reeb.SqlOM.FromTerm.Table(System.String)">Table</see> is a name of a table or view with an optional alias. 
+            Use <see cref="M:Reeb.SqlOM.FromTerm.Table(System.String)">TableRef</see> to specify a reference to another term. 
+            You will usually use TableRef to specify one of the previously defined tables in a join.
+            <see cref="M:Reeb.SqlOM.FromTerm.SubQuery(System.String,System.String)">SubQuery</see> creates a term with a subquery and mandatory alias. Please note that not all databases support sub-queires.
+            </remarks>
+            <example>
+            The follwoing example selects some columns from two tables joined by a left outer join.
+            <code>
+            FromTerm tCustomers = FromTerm.Table("customers");
+            FromTerm tProducts = FromTerm.Table("products", "p");
+            FromTerm tOrders = FromTerm.Table("orders", "o");
+            
+            SelectQuery query = new SelectQuery();
+            query.Columns.Add(new SelectColumn("name", tCustomers));
+            query.Columns.Add(new SelectColumn("name", tProducts));
+            query.FromClause.BaseTable = tCustomers;
+            query.FromClause.Join(JoinType.Inner, query.FromClause.BaseTable, tOrders, "customerId", "customerId");
+            query.FromClause.Join(JoinType.Inner, tOrders, tProducts, "productId", "productId");
+            </code>
+            </example>
+        </member>
+        <member name="M:Reeb.SqlOM.FromTerm.Table(System.String)">
+            <summary>
+            Creates a FromTerm which represents a database table or view.
+            </summary>
+            <param name="name">Name of the table or view</param>
+            <returns>A FromTerm which represents a database table or view</returns>
+            <remarks>Creates a <see cref="T:Reeb.SqlOM.FromTerm">FromTerm</see> without an alias. 
+            The created term will be referenced by the table's name.</remarks>
+        </member>
+        <member name="M:Reeb.SqlOM.FromTerm.Table(System.String,System.String)">
+            <summary>
+            Creates a FromTerm which represents a database table or view.
+            </summary>
+            <param name="tableName">Name of the table or view</param>
+            <param name="alias">Alias of the FromTerm</param>
+            <returns>A FromTerm which represents a database table or view</returns>
+        </member>
+        <member name="M:Reeb.SqlOM.FromTerm.Table(System.String,System.String,System.String)">
+            <summary>
+            Creates a FromTerm which represents a database table or view.
+            </summary>
+            <param name="tableName">Name of the table or view</param>
+            <param name="alias">Alias of the FromTerm</param>
+            <param name="ns">Namespace of the table.</param>
+            <returns>A FromTerm which represents a database table or view</returns>
+            <remarks>Use the <paramref name="ns"/> parameter to resolve table ownership</remarks>
+        </member>
+        <member name="M:Reeb.SqlOM.FromTerm.Table(System.String,System.String,System.String,System.String)">
+            <summary>
+            Creates a FromTerm which represents a database table or view.
+            </summary>
+            <param name="tableName">Name of the table or view</param>
+            <param name="alias">Alias of the FromTerm</param>
+            <param name="ns1">First table namespace</param>
+            <param name="ns2">Second table namespace</param>
+            <returns>A FromTerm which represents a database table or view</returns>
+            <remarks>Use the <paramref name="ns1"/> parameter to set table database and <paramref name="ns2"/> to set table owner.</remarks>
+        </member>
+        <member name="M:Reeb.SqlOM.FromTerm.TermRef(System.String)">
+            <summary>
+            Creates a FromTerm which refernces abother FromTerm.
+            </summary>
+            <param name="name">The name of the referenced term.</param>
+            <returns>A FromTerm which refernces another FromTerm.</returns>
+            <remarks>
+            Use TermRef to reference other terms of a from clause by <see cref="P:Reeb.SqlOM.FromTerm.RefName">RefName</see>
+            </remarks>
+        </member>
+        <member name="M:Reeb.SqlOM.FromTerm.SubQuery(System.String,System.String)">
+            <summary>
+            Creates a FromTerm which represents a sub-query.
+            </summary>
+            <param name="query">sub-query sql</param>
+            <param name="alias">term alias</param>
+            <returns>A FromTerm which represents a sub-query.</returns>
+        </member>
+        <member name="M:Reeb.SqlOM.FromTerm.SubQuery(Reeb.SqlOM.SelectQuery,System.String)">
+            <summary>
+            Creates a FromTerm which represents a sub-query.
+            </summary>
+            <param name="query">A SelectQuery instance representing the sub query</param>
+            <param name="alias">term alias</param>
+            <returns>A FromTerm which represents a sub-query.</returns>
+        </member>
+        <member name="P:Reeb.SqlOM.FromTerm.Expression">
+            <summary>
+            Gets the expression defined for this term.
+            </summary>
+            <remarks>
+            The value of this property depends on the type of term. It will be table name
+            for Table terms, SQL for SubQueries or null for TermRefs.
+            </remarks>
+        </member>
+        <member name="P:Reeb.SqlOM.FromTerm.Alias">
+            <summary>
+            Gets the alias of the term.
+            </summary>
+            <remarks>This property can be null for some types of FromTerm</remarks>
+        </member>
+        <member name="P:Reeb.SqlOM.FromTerm.Type">
+            <summary>
+            Gets the type of the FromTerm
+            </summary>
+        </member>
+        <member name="P:Reeb.SqlOM.FromTerm.RefName">
+            <summary>
+            Gets the reference name of this term.
+            </summary>
+        </member>
+        <member name="T:Reeb.SqlOM.GroupByTerm">
+            <summary>
+            Represents one term in a GROUP BY clause
+            </summary>
+            <remarks>
+            Use OrderByTerm to specify how rows of a result-set should be grouped. 
+            Please note that when you use GROUP BY, your SELECT statement can only include columns which are specified in the GROUP BY clause and aggregation columns.
+            </remarks>
+        </member>
+        <member name="M:Reeb.SqlOM.GroupByTerm.#ctor(System.String,Reeb.SqlOM.FromTerm)">
+            <summary>
+            Creates a GROUP BY term with field name and table alias
+            </summary>
+            <param name="field">Name of a field to group by</param>
+            <param name="table">The table this field belongs to</param>
+        </member>
+        <member name="M:Reeb.SqlOM.GroupByTerm.#ctor(System.String)">
+            <summary>
+            Creates a GROUP BY term with field name and no FromTerm alias
+            </summary>
+            <param name="field">Name of a field to group by</param>
+        </member>
+        <member name="P:Reeb.SqlOM.GroupByTerm.Field">
+            <summary>
+            Gets the name of a field to group by
+            </summary>
+        </member>
+        <member name="P:Reeb.SqlOM.GroupByTerm.Table">
+            <summary>
+            Gets the table the field belongs to
+            </summary>
+        </member>
+        <member name="P:Reeb.SqlOM.GroupByTerm.TableAlias">
+            <summary>
+            Gets the table alias for this GroupByTerm
+            </summary>
+            <remarks>
+            Gets the name of a FromTerm the field specified by <see cref="P:Reeb.SqlOM.GroupByTerm.Field">Field</see> property.
+            </remarks>
+        </member>
+        <member name="T:Reeb.SqlOM.GroupByTermCollection">
+            <summary>
+            A collection of elements of type GroupByTerm
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.GroupByTermCollection.#ctor">
+            <summary>
+            Initializes a new empty instance of the GroupByTermCollection class.
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.GroupByTermCollection.#ctor(Reeb.SqlOM.GroupByTerm[])">
+            <summary>
+            Initializes a new instance of the GroupByTermCollection class, containing elements
+            copied from an array.
+            </summary>
+            <param name="items">
+            The array whose elements are to be added to the new GroupByTermCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.GroupByTermCollection.#ctor(Reeb.SqlOM.GroupByTermCollection)">
+            <summary>
+            Initializes a new instance of the GroupByTermCollection class, containing elements
+            copied from another instance of GroupByTermCollection
+            </summary>
+            <param name="items">
+            The GroupByTermCollection whose elements are to be added to the new GroupByTermCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.GroupByTermCollection.AddRange(Reeb.SqlOM.GroupByTerm[])">
+            <summary>
+            Adds the elements of an array to the end of this GroupByTermCollection.
+            </summary>
+            <param name="items">
+            The array whose elements are to be added to the end of this GroupByTermCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.GroupByTermCollection.AddRange(Reeb.SqlOM.GroupByTermCollection)">
+            <summary>
+            Adds the elements of another GroupByTermCollection to the end of this GroupByTermCollection.
+            </summary>
+            <param name="items">
+            The GroupByTermCollection whose elements are to be added to the end of this GroupByTermCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.GroupByTermCollection.Add(Reeb.SqlOM.GroupByTerm)">
+            <summary>
+            Adds an instance of type GroupByTerm to the end of this GroupByTermCollection.
+            </summary>
+            <param name="value">
+            The GroupByTerm to be added to the end of this GroupByTermCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.GroupByTermCollection.Contains(Reeb.SqlOM.GroupByTerm)">
+            <summary>
+            Determines whether a specfic GroupByTerm value is in this GroupByTermCollection.
+            </summary>
+            <param name="value">
+            The GroupByTerm value to locate in this GroupByTermCollection.
+            </param>
+            <returns>
+            true if value is found in this GroupByTermCollection;
+            false otherwise.
+            </returns>
+        </member>
+        <member name="M:Reeb.SqlOM.GroupByTermCollection.IndexOf(Reeb.SqlOM.GroupByTerm)">
+            <summary>
+            Return the zero-based index of the first occurrence of a specific value
+            in this GroupByTermCollection
+            </summary>
+            <param name="value">
+            The GroupByTerm value to locate in the GroupByTermCollection.
+            </param>
+            <returns>
+            The zero-based index of the first occurrence of the _ELEMENT value if found;
+            -1 otherwise.
+            </returns>
+        </member>
+        <member name="M:Reeb.SqlOM.GroupByTermCollection.Insert(System.Int32,Reeb.SqlOM.GroupByTerm)">
+            <summary>
+            Inserts an element into the GroupByTermCollection at the specified index
+            </summary>
+            <param name="index">
+            The index at which the GroupByTerm is to be inserted.
+            </param>
+            <param name="value">
+            The GroupByTerm to insert.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.GroupByTermCollection.Remove(Reeb.SqlOM.GroupByTerm)">
+            <summary>
+            Removes the first occurrence of a specific GroupByTerm from this GroupByTermCollection.
+            </summary>
+            <param name="value">
+            The GroupByTerm value to remove from this GroupByTermCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.GroupByTermCollection.GetEnumerator">
+            <summary>
+            Returns an enumerator that can iterate through the elements of this GroupByTermCollection.
+            </summary>
+            <returns>
+            An object that implements System.Collections.IEnumerator.
+            </returns>        
+        </member>
+        <member name="P:Reeb.SqlOM.GroupByTermCollection.Item(System.Int32)">
+            <summary>
+            Gets or sets the GroupByTerm at the given index in this GroupByTermCollection.
+            </summary>
+        </member>
+        <member name="T:Reeb.SqlOM.GroupByTermCollection.Enumerator">
+            <summary>
+            Type-specific enumeration class, used by GroupByTermCollection.GetEnumerator.
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.GroupByTermCollection.Enumerator.#ctor(Reeb.SqlOM.GroupByTermCollection)">
+            <summary>
+            
+            </summary>
+            <param name="collection"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.GroupByTermCollection.Enumerator.MoveNext">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Reeb.SqlOM.GroupByTermCollection.Enumerator.Reset">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Reeb.SqlOM.GroupByTermCollection.Enumerator.Current">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Reeb.SqlOM.InsertQuery">
+            <summary>
+            Encapsulates a SQL INSERT statement
+            </summary>
+            <remarks>
+            Use InsertQuery to insert a new row into a database table.
+            Set <see cref="P:Reeb.SqlOM.InsertQuery.TableName"/> to the table you would like to insert into and use
+            the <see cref="P:Reeb.SqlOM.InsertQuery.Terms"/> collection to specify values to be inserted.
+            </remarks>
+            <example>
+            <code>
+            InsertQuery query = new InsertQuery("products");
+            query.Terms.Add(new UpdateTerm("productId", SqlExpression.Number(999)));
+            query.Terms.Add(new UpdateTerm("name", SqlExpression.String("Temporary Test Product")));
+            query.Terms.Add(new UpdateTerm("price", SqlExpression.Number(123.45)));
+            query.Terms.Add(new UpdateTerm("quantaty", SqlExpression.Number(97)));
+            RenderInsert(query);
+            </code>
+            </example>
+        </member>
+        <member name="M:Reeb.SqlOM.InsertQuery.#ctor">
+            <summary>
+            Create an InsertQuery
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.InsertQuery.#ctor(System.String)">
+            <summary>
+            Create an InsertQuery
+            </summary>
+            <param name="tableName">The name of the table to be inseserted into</param>
+        </member>
+        <member name="M:Reeb.SqlOM.InsertQuery.Validate">
+            <summary>
+            Validates InsertQuery
+            </summary>
+        </member>
+        <member name="P:Reeb.SqlOM.InsertQuery.Terms">
+            <summary>
+            Gets the collection if column-value pairs
+            </summary>
+            <remarks>
+            Terms specify which values should be inserted into the table.
+            </remarks>
+        </member>
+        <member name="P:Reeb.SqlOM.InsertQuery.TableName">
+            <summary>
+            Gets or set the name of a table to be inserted into
+            </summary>
+        </member>
+        <member name="T:Reeb.SqlOM.JoinCollection">
+            <summary>
+              A collection that stores <see cref="T:Reeb.SqlOM.Join"/> objects.
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.JoinCollection.#ctor">
+            <summary>
+              Initializes a new instance of <see cref="T:Reeb.SqlOM.JoinCollection"/>.
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.JoinCollection.#ctor(Reeb.SqlOM.JoinCollection)">
+            <summary>
+              Initializes a new instance of <see cref="T:Reeb.SqlOM.JoinCollection"/> based on another <see cref="T:Reeb.SqlOM.JoinCollection"/>.
+            </summary>
+            <param name="val">
+              A <see cref="T:Reeb.SqlOM.JoinCollection"/> from which the contents are copied
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.JoinCollection.#ctor(Reeb.SqlOM.Join[])">
+            <summary>
+              Initializes a new instance of <see cref="T:Reeb.SqlOM.JoinCollection"/> containing any array of <see cref="T:Reeb.SqlOM.Join"/> objects.
+            </summary>
+            <param name="val">
+                  A array of <see cref="T:Reeb.SqlOM.Join"/> objects with which to intialize the collection
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.JoinCollection.Add(Reeb.SqlOM.Join)">
+            <summary>
+              Adds a <see cref="T:Reeb.SqlOM.Join"/> with the specified value to the 
+              <see cref="T:Reeb.SqlOM.JoinCollection"/>.
+            </summary>
+            <param name="val">The <see cref="T:Reeb.SqlOM.Join"/> to add.</param>
+            <returns>The index at which the new element was inserted.</returns>
+            <seealso cref="M:Reeb.SqlOM.JoinCollection.AddRange(Reeb.SqlOM.Join[])"/>
+        </member>
+        <member name="M:Reeb.SqlOM.JoinCollection.AddRange(Reeb.SqlOM.Join[])">
+            <summary>
+              Copies the elements of an array to the end of the <see cref="T:Reeb.SqlOM.JoinCollection"/>.
+            </summary>
+            <param name="val">
+               An array of type <see cref="T:Reeb.SqlOM.Join"/> containing the objects to add to the collection.
+            </param>
+            <seealso cref="M:Reeb.SqlOM.JoinCollection.Add(Reeb.SqlOM.Join)"/>
+        </member>
+        <member name="M:Reeb.SqlOM.JoinCollection.AddRange(Reeb.SqlOM.JoinCollection)">
+            <summary>
+              Adds the contents of another <see cref="T:Reeb.SqlOM.JoinCollection"/> to the end of the collection.
+            </summary>
+            <param name="val">
+               A <see cref="T:Reeb.SqlOM.JoinCollection"/> containing the objects to add to the collection.
+            </param>
+            <seealso cref="M:Reeb.SqlOM.JoinCollection.Add(Reeb.SqlOM.Join)"/>
+        </member>
+        <member name="M:Reeb.SqlOM.JoinCollection.Contains(Reeb.SqlOM.Join)">
+            <summary>
+              Gets a value indicating whether the 
+               <see cref="T:Reeb.SqlOM.JoinCollection"/> contains the specified <see cref="T:Reeb.SqlOM.Join"/>.
+            </summary>
+            <param name="val">The <see cref="T:Reeb.SqlOM.Join"/> to locate.</param>
+            <returns>
+            <see langword="true"/> if the <see cref="T:Reeb.SqlOM.Join"/> is contained in the collection; 
+              otherwise, <see langword="false"/>.
+            </returns>
+            <seealso cref="M:Reeb.SqlOM.JoinCollection.IndexOf(Reeb.SqlOM.Join)"/>
+        </member>
+        <member name="M:Reeb.SqlOM.JoinCollection.CopyTo(Reeb.SqlOM.Join[],System.Int32)">
+            <summary>
+              Copies the <see cref="T:Reeb.SqlOM.JoinCollection"/> values to a one-dimensional <see cref="T:System.Array"/> instance at the 
+               specified index.
+            </summary>
+            <param name="array">The one-dimensional <see cref="T:System.Array"/> that is the destination of the values copied from <see cref="T:Reeb.SqlOM.JoinCollection"/>.</param>
+            <param name="index">The index in <paramref name="array"/> where copying begins.</param>
+            <exception cref="T:System.ArgumentException">
+              <para><paramref name="array"/> is multidimensional.</para>
+              <para>-or-</para>
+              <para>The number of elements in the <see cref="T:Reeb.SqlOM.JoinCollection"/> is greater than
+                    the available space between <paramref name="arrayIndex"/> and the end of
+                    <paramref name="array"/>.</para>
+            </exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="array"/> is <see langword="null"/>. </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="arrayIndex"/> is less than <paramref name="array"/>'s lowbound. </exception>
+            <seealso cref="T:System.Array"/>
+        </member>
+        <member name="M:Reeb.SqlOM.JoinCollection.IndexOf(Reeb.SqlOM.Join)">
+            <summary>
+               Returns the index of a <see cref="T:Reeb.SqlOM.Join"/> in 
+                  the <see cref="T:Reeb.SqlOM.JoinCollection"/>.
+            </summary>
+            <param name="val">The <see cref="T:Reeb.SqlOM.Join"/> to locate.</param>
+            <returns>
+              The index of the <see cref="T:Reeb.SqlOM.Join"/> of <paramref name="val"/> in the 
+              <see cref="T:Reeb.SqlOM.JoinCollection"/>, if found; otherwise, -1.
+            </returns>
+            <seealso cref="M:Reeb.SqlOM.JoinCollection.Contains(Reeb.SqlOM.Join)"/>
+        </member>
+        <member name="M:Reeb.SqlOM.JoinCollection.Insert(System.Int32,Reeb.SqlOM.Join)">
+            <summary>
+              Inserts a <see cref="T:Reeb.SqlOM.Join"/> into the <see cref="T:Reeb.SqlOM.JoinCollection"/> at the specified index.
+            </summary>
+            <param name="index">The zero-based index where <paramref name="val"/> should be inserted.</param>
+            <param name="val">The <see cref="T:Reeb.SqlOM.Join"/> to insert.</param>
+            <seealso cref="M:Reeb.SqlOM.JoinCollection.Add(Reeb.SqlOM.Join)"/>
+        </member>
+        <member name="M:Reeb.SqlOM.JoinCollection.GetEnumerator">
+            <summary>
+             Returns an enumerator that can iterate through the <see cref="T:Reeb.SqlOM.JoinCollection"/>.
+            </summary>
+            <seealso cref="T:System.Collections.IEnumerator"/>
+        </member>
+        <member name="M:Reeb.SqlOM.JoinCollection.Remove(Reeb.SqlOM.Join)">
+            <summary>
+              Removes a specific <see cref="T:Reeb.SqlOM.Join"/> from the <see cref="T:Reeb.SqlOM.JoinCollection"/>.
+            </summary>
+            <param name="val">The <see cref="T:Reeb.SqlOM.Join"/> to remove from the <see cref="T:Reeb.SqlOM.JoinCollection"/>.</param>
+            <exception cref="T:System.ArgumentException"><paramref name="val"/> is not found in the Collection.</exception>
+        </member>
+        <member name="P:Reeb.SqlOM.JoinCollection.Item(System.Int32)">
+            <summary>
+              Represents the entry at the specified index of the <see cref="T:Reeb.SqlOM.Join"/>.
+            </summary>
+            <param name="index">The zero-based index of the entry to locate in the collection.</param>
+            <value>The entry at the specified index of the collection.</value>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is outside the valid range of indexes for the collection.</exception>
+        </member>
+        <member name="T:Reeb.SqlOM.JoinCollection.JoinEnumerator">
+            <summary>
+              Enumerator that can iterate through a JoinCollection.
+            </summary>
+            <seealso cref="T:System.Collections.IEnumerator"/>
+            <seealso cref="T:Reeb.SqlOM.JoinCollection"/>
+            <seealso cref="T:Reeb.SqlOM.Join"/>
+        </member>
+        <member name="M:Reeb.SqlOM.JoinCollection.JoinEnumerator.#ctor(Reeb.SqlOM.JoinCollection)">
+            <summary>
+              Initializes a new instance of <see cref="T:Reeb.SqlOM.JoinCollection.JoinEnumerator"/>.
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.JoinCollection.JoinEnumerator.MoveNext">
+            <summary>
+              Advances the enumerator to the next <see cref="T:Reeb.SqlOM.Join"/> of the <see cref="T:Reeb.SqlOM.JoinCollection"/>.
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.JoinCollection.JoinEnumerator.Reset">
+            <summary>
+              Sets the enumerator to its initial position, which is before the first element in the <see cref="T:Reeb.SqlOM.JoinCollection"/>.
+            </summary>
+        </member>
+        <member name="P:Reeb.SqlOM.JoinCollection.JoinEnumerator.Current">
+            <summary>
+              Gets the current <see cref="T:Reeb.SqlOM.Join"/> in the <seealso cref="T:Reeb.SqlOM.JoinCollection"/>.
+            </summary>
+        </member>
+        <member name="T:Reeb.SqlOM.JoinCondition">
+            <summary>
+            Describes a simple join condition.
+            </summary>
+            <remarks>
+            <see cref="T:Reeb.SqlOM.JoinCondition"/> encapsulates a pair of fields, one from the
+            left joined table and one from the right table. 
+            </remarks>
+        </member>
+        <member name="M:Reeb.SqlOM.JoinCondition.#ctor(System.String)">
+            <summary>
+            Creates a Natural JoinCondition
+            </summary>
+            <param name="field">Name of the field in both tables</param>
+            <remarks>
+            Natural join means that two table are joined on an identically named fields
+            in both tables
+            </remarks>
+        </member>
+        <member name="M:Reeb.SqlOM.JoinCondition.#ctor(System.String,System.String)">
+            <summary>
+            Creates a new JoinCondition
+            </summary>
+            <param name="leftField">Name of the field in the left table to join on</param>
+            <param name="rightField">Name of the field in the right table to join on</param>
+        </member>
+        <member name="P:Reeb.SqlOM.JoinCondition.LeftField">
+            <summary>
+            Gets the name of the field in the left table to join on
+            </summary>
+        </member>
+        <member name="P:Reeb.SqlOM.JoinCondition.RightField">
+            <summary>
+            Gets the name of the field in the right table to join on
+            </summary>
+        </member>
+        <member name="T:Reeb.SqlOM.OrderByDirection">
+            <summary>
+            Specifies how a result set should be ordered.
+            </summary>
+        </member>
+        <member name="F:Reeb.SqlOM.OrderByDirection.Ascending">
+            <summary>Ascending Order</summary>
+        </member>
+        <member name="F:Reeb.SqlOM.OrderByDirection.Descending">
+            <summary>Descending Order</summary>
+        </member>
+        <member name="T:Reeb.SqlOM.OrderByTerm">
+            <summary>
+            Represents one term in an ORDER BY clause
+            </summary>
+            <remarks>
+            Use OrderByTerm to specify how a result-set should be ordered.
+            </remarks>
+        </member>
+        <member name="M:Reeb.SqlOM.OrderByTerm.#ctor(System.String,Reeb.SqlOM.FromTerm,Reeb.SqlOM.OrderByDirection)">
+            <summary>
+            Creates an ORDER BY term with field name and table alias
+            </summary>
+            <param name="field">Name of a field to order by</param>
+            <param name="table">The table this field belongs to</param>
+            <param name="dir">Order by direction</param>
+        </member>
+        <member name="M:Reeb.SqlOM.OrderByTerm.#ctor(System.String,Reeb.SqlOM.OrderByDirection)">
+            <summary>
+            Creates an ORDER BY term with field name and no table alias
+            </summary>
+            <param name="field">Name of a field to order by</param>
+            <param name="dir">Order by direction</param>
+        </member>
+        <member name="P:Reeb.SqlOM.OrderByTerm.Direction">
+            <summary>
+            Gets the direction for this OrderByTerm
+            </summary>
+        </member>
+        <member name="P:Reeb.SqlOM.OrderByTerm.Field">
+            <summary>
+            Gets the name of a field to order by
+            </summary>
+        </member>
+        <member name="P:Reeb.SqlOM.OrderByTerm.TableAlias">
+            <summary>
+            Gets the table alias for this OrderByTerm
+            </summary>
+            <remarks>
+            Gets the name of a FromTerm the field specified by <see cref="P:Reeb.SqlOM.OrderByTerm.Field">Field</see> property.
+            </remarks>
+        </member>
+        <member name="P:Reeb.SqlOM.OrderByTerm.Table">
+            <summary>
+            Returns the FromTerm associated with this OrderByTerm
+            </summary>
+        </member>
+        <member name="T:Reeb.SqlOM.OrderByTermCollection">
+            <summary>
+            A collection of elements of type OrderByTerm
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.OrderByTermCollection.#ctor">
+            <summary>
+            Initializes a new empty instance of the OrderByTermCollection class.
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.OrderByTermCollection.#ctor(Reeb.SqlOM.OrderByTerm[])">
+            <summary>
+            Initializes a new instance of the OrderByTermCollection class, containing elements
+            copied from an array.
+            </summary>
+            <param name="items">
+            The array whose elements are to be added to the new OrderByTermCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.OrderByTermCollection.#ctor(Reeb.SqlOM.OrderByTermCollection)">
+            <summary>
+            Initializes a new instance of the OrderByTermCollection class, containing elements
+            copied from another instance of OrderByTermCollection
+            </summary>
+            <param name="items">
+            The OrderByTermCollection whose elements are to be added to the new OrderByTermCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.OrderByTermCollection.AddRange(Reeb.SqlOM.OrderByTerm[])">
+            <summary>
+            Adds the elements of an array to the end of this OrderByTermCollection.
+            </summary>
+            <param name="items">
+            The array whose elements are to be added to the end of this OrderByTermCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.OrderByTermCollection.AddRange(Reeb.SqlOM.OrderByTermCollection)">
+            <summary>
+            Adds the elements of another OrderByTermCollection to the end of this OrderByTermCollection.
+            </summary>
+            <param name="items">
+            The OrderByTermCollection whose elements are to be added to the end of this OrderByTermCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.OrderByTermCollection.Add(Reeb.SqlOM.OrderByTerm)">
+            <summary>
+            Adds an instance of type OrderByTerm to the end of this OrderByTermCollection.
+            </summary>
+            <param name="value">
+            The OrderByTerm to be added to the end of this OrderByTermCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.OrderByTermCollection.Contains(Reeb.SqlOM.OrderByTerm)">
+            <summary>
+            Determines whether a specfic OrderByTerm value is in this OrderByTermCollection.
+            </summary>
+            <param name="value">
+            The OrderByTerm value to locate in this OrderByTermCollection.
+            </param>
+            <returns>
+            true if value is found in this OrderByTermCollection;
+            false otherwise.
+            </returns>
+        </member>
+        <member name="M:Reeb.SqlOM.OrderByTermCollection.IndexOf(Reeb.SqlOM.OrderByTerm)">
+            <summary>
+            Return the zero-based index of the first occurrence of a specific value
+            in this OrderByTermCollection
+            </summary>
+            <param name="value">
+            The OrderByTerm value to locate in the OrderByTermCollection.
+            </param>
+            <returns>
+            The zero-based index of the first occurrence of the _ELEMENT value if found;
+            -1 otherwise.
+            </returns>
+        </member>
+        <member name="M:Reeb.SqlOM.OrderByTermCollection.Insert(System.Int32,Reeb.SqlOM.OrderByTerm)">
+            <summary>
+            Inserts an element into the OrderByTermCollection at the specified index
+            </summary>
+            <param name="index">
+            The index at which the OrderByTerm is to be inserted.
+            </param>
+            <param name="value">
+            The OrderByTerm to insert.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.OrderByTermCollection.Remove(Reeb.SqlOM.OrderByTerm)">
+            <summary>
+            Removes the first occurrence of a specific OrderByTerm from this OrderByTermCollection.
+            </summary>
+            <param name="value">
+            The OrderByTerm value to remove from this OrderByTermCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.OrderByTermCollection.GetEnumerator">
+            <summary>
+            Returns an enumerator that can iterate through the elements of this OrderByTermCollection.
+            </summary>
+            <returns>
+            An object that implements System.Collections.IEnumerator.
+            </returns>        
+        </member>
+        <member name="P:Reeb.SqlOM.OrderByTermCollection.Item(System.Int32)">
+            <summary>
+            Gets or sets the OrderByTerm at the given index in this OrderByTermCollection.
+            </summary>
+        </member>
+        <member name="T:Reeb.SqlOM.OrderByTermCollection.Enumerator">
+            <summary>
+            Type-specific enumeration class, used by OrderByTermCollection.GetEnumerator.
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.OrderByTermCollection.Enumerator.#ctor(Reeb.SqlOM.OrderByTermCollection)">
+            <summary>
+            
+            </summary>
+            <param name="collection"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.OrderByTermCollection.Enumerator.MoveNext">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Reeb.SqlOM.OrderByTermCollection.Enumerator.Reset">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Reeb.SqlOM.OrderByTermCollection.Enumerator.Current">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Reeb.SqlOM.SqlAggregationFunction">
+            <summary>
+            Specifies which function should be applied on a column
+            </summary>
+        </member>
+        <member name="F:Reeb.SqlOM.SqlAggregationFunction.None">
+            <summary>No function</summary>
+        </member>
+        <member name="F:Reeb.SqlOM.SqlAggregationFunction.Sum">
+            <summary>Sum</summary>
+        </member>
+        <member name="F:Reeb.SqlOM.SqlAggregationFunction.Count">
+            <summary>Count rows</summary>
+        </member>
+        <member name="F:Reeb.SqlOM.SqlAggregationFunction.Avg">
+            <summary>Avarage</summary>
+        </member>
+        <member name="F:Reeb.SqlOM.SqlAggregationFunction.Min">
+            <summary>Minimum</summary>
+        </member>
+        <member name="F:Reeb.SqlOM.SqlAggregationFunction.Max">
+            <summary>Maximum</summary>
+        </member>
+        <member name="F:Reeb.SqlOM.SqlAggregationFunction.Grouping">
+            <summary>Returns true is the current row is a super-aggregate row when used with ROLLUP or CUBE</summary>
+            <remarks>Grouping functions is not supported in all databases</remarks>
+        </member>
+        <member name="T:Reeb.SqlOM.SelectColumn">
+            <summary>
+            Describes a column of a select clause
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.SelectColumn.#ctor(System.String)">
+            <summary>
+            Creates a SelectColumn with a column name, no table, no column alias and no function
+            </summary>
+            <param name="columnName">Name of a column</param>
+        </member>
+        <member name="M:Reeb.SqlOM.SelectColumn.#ctor(System.String,Reeb.SqlOM.FromTerm)">
+            <summary>
+            Creates a SelectColumn with a column name, table, no column alias and no function
+            </summary>
+            <param name="columnName">Name of a column</param>
+            <param name="table">The table this field belongs to</param>
+        </member>
+        <member name="M:Reeb.SqlOM.SelectColumn.#ctor(System.String,Reeb.SqlOM.FromTerm,System.String)">
+            <summary>
+            Creates a SelectColumn with a column name, table and column alias
+            </summary>
+            <param name="columnName">Name of a column</param>
+            <param name="table">The table this field belongs to</param>
+            <param name="columnAlias">Alias of the column</param>
+        </member>
+        <member name="M:Reeb.SqlOM.SelectColumn.#ctor(System.String,Reeb.SqlOM.FromTerm,System.String,Reeb.SqlOM.SqlAggregationFunction)">
+            <summary>
+            Creates a SelectColumn with a column name, table, column alias and optional aggregation function
+            </summary>
+            <param name="columnName">Name of a column</param>
+            <param name="table">The table this field belongs to</param>
+            <param name="columnAlias">Alias of the column</param>
+            <param name="function">Aggregation function to be applied to the column. Use SqlAggregationFunction.None to specify that no function should be applied.</param>
+        </member>
+        <member name="M:Reeb.SqlOM.SelectColumn.#ctor(Reeb.SqlOM.SqlExpression,System.String)">
+            <summary>
+            Creates a SelectColumn
+            </summary>
+            <param name="expr">Expression</param>
+            <param name="columnAlias">Column alias</param>
+        </member>
+        <member name="P:Reeb.SqlOM.SelectColumn.ColumnAlias">
+            <summary>
+            Gets the column alias for this SelectColumn
+            </summary>
+        </member>
+        <member name="T:Reeb.SqlOM.SelectColumnCollection">
+            <summary>
+            A collection of elements of type SelectColumn
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.SelectColumnCollection.#ctor">
+            <summary>
+            Initializes a new empty instance of the SelectColumnCollection class.
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.SelectColumnCollection.#ctor(Reeb.SqlOM.SelectColumn[])">
+            <summary>
+            Initializes a new instance of the SelectColumnCollection class, containing elements
+            copied from an array.
+            </summary>
+            <param name="items">
+            The array whose elements are to be added to the new SelectColumnCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.SelectColumnCollection.#ctor(Reeb.SqlOM.SelectColumnCollection)">
+            <summary>
+            Initializes a new instance of the SelectColumnCollection class, containing elements
+            copied from another instance of SelectColumnCollection
+            </summary>
+            <param name="items">
+            The SelectColumnCollection whose elements are to be added to the new SelectColumnCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.SelectColumnCollection.AddRange(Reeb.SqlOM.SelectColumn[])">
+            <summary>
+            Adds the elements of an array to the end of this SelectColumnCollection.
+            </summary>
+            <param name="items">
+            The array whose elements are to be added to the end of this SelectColumnCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.SelectColumnCollection.AddRange(Reeb.SqlOM.SelectColumnCollection)">
+            <summary>
+            Adds the elements of another SelectColumnCollection to the end of this SelectColumnCollection.
+            </summary>
+            <param name="items">
+            The SelectColumnCollection whose elements are to be added to the end of this SelectColumnCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.SelectColumnCollection.Add(Reeb.SqlOM.SelectColumn)">
+            <summary>
+            Adds an instance of type SelectColumn to the end of this SelectColumnCollection.
+            </summary>
+            <param name="value">
+            The SelectColumn to be added to the end of this SelectColumnCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.SelectColumnCollection.Contains(Reeb.SqlOM.SelectColumn)">
+            <summary>
+            Determines whether a specfic SelectColumn value is in this SelectColumnCollection.
+            </summary>
+            <param name="value">
+            The SelectColumn value to locate in this SelectColumnCollection.
+            </param>
+            <returns>
+            true if value is found in this SelectColumnCollection;
+            false otherwise.
+            </returns>
+        </member>
+        <member name="M:Reeb.SqlOM.SelectColumnCollection.IndexOf(Reeb.SqlOM.SelectColumn)">
+            <summary>
+            Return the zero-based index of the first occurrence of a specific value
+            in this SelectColumnCollection
+            </summary>
+            <param name="value">
+            The SelectColumn value to locate in the SelectColumnCollection.
+            </param>
+            <returns>
+            The zero-based index of the first occurrence of the _ELEMENT value if found;
+            -1 otherwise.
+            </returns>
+        </member>
+        <member name="M:Reeb.SqlOM.SelectColumnCollection.Insert(System.Int32,Reeb.SqlOM.SelectColumn)">
+            <summary>
+            Inserts an element into the SelectColumnCollection at the specified index
+            </summary>
+            <param name="index">
+            The index at which the SelectColumn is to be inserted.
+            </param>
+            <param name="value">
+            The SelectColumn to insert.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.SelectColumnCollection.Remove(Reeb.SqlOM.SelectColumn)">
+            <summary>
+            Removes the first occurrence of a specific SelectColumn from this SelectColumnCollection.
+            </summary>
+            <param name="value">
+            The SelectColumn value to remove from this SelectColumnCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.SelectColumnCollection.GetEnumerator">
+            <summary>
+            Returns an enumerator that can iterate through the elements of this SelectColumnCollection.
+            </summary>
+            <returns>
+            An object that implements System.Collections.IEnumerator.
+            </returns>        
+        </member>
+        <member name="P:Reeb.SqlOM.SelectColumnCollection.Item(System.Int32)">
+            <summary>
+            Gets or sets the SelectColumn at the given index in this SelectColumnCollection.
+            </summary>
+        </member>
+        <member name="T:Reeb.SqlOM.SelectColumnCollection.Enumerator">
+            <summary>
+            Type-specific enumeration class, used by SelectColumnCollection.GetEnumerator.
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.SelectColumnCollection.Enumerator.#ctor(Reeb.SqlOM.SelectColumnCollection)">
+            <summary>
+            
+            </summary>
+            <param name="collection"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.SelectColumnCollection.Enumerator.MoveNext">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Reeb.SqlOM.SelectColumnCollection.Enumerator.Reset">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Reeb.SqlOM.SelectColumnCollection.Enumerator.Current">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Reeb.SqlOM.CompareOperator">
+            <summary>
+            Specifies how tow operands are to be compared
+            </summary>
+        </member>
+        <member name="F:Reeb.SqlOM.CompareOperator.Equal">
+            <summary>Equal</summary>
+        </member>
+        <member name="F:Reeb.SqlOM.CompareOperator.NotEqual">
+            <summary>Different</summary>
+        </member>
+        <member name="F:Reeb.SqlOM.CompareOperator.Greater">
+            <summary>Left operand is greater</summary>
+        </member>
+        <member name="F:Reeb.SqlOM.CompareOperator.Less">
+            <summary>Left operand is less</summary>
+        </member>
+        <member name="F:Reeb.SqlOM.CompareOperator.LessOrEqual">
+            <summary>Left operand is less or equal</summary>
+        </member>
+        <member name="F:Reeb.SqlOM.CompareOperator.GreaterOrEqual">
+            <summary>Left operand is greater or equal</summary>
+        </member>
+        <member name="F:Reeb.SqlOM.CompareOperator.BitwiseAnd">
+            <summary>Make a bitwise AND and check the result for being not null (ex: (a &amp; b) > 0) ) </summary>
+        </member>
+        <member name="F:Reeb.SqlOM.CompareOperator.Like">
+            <summary>Substring. Use '%' signs in the value to match anything</summary>
+        </member>
+        <member name="T:Reeb.SqlOM.SelectQuery">
+             <summary>
+             Encapsulates a SQL SELECT statement.
+             </summary>
+             <remarks>
+             Use SelectQuery to define and modify a query. 
+             When the query is ready to be executed it can be rendered to SQL using one of the renderers derived from <see cref="T:Reeb.SqlOM.Render.ISqlOmRenderer">ISqlOMRenderer</see>
+             and executed using standard .Net query execution methods.
+             <para>SelectQuery can be useful for dynamic SQL generation for reports and filters.</para>
+             <para>It can also be used to render SQL to retrieve pages of data from databases which do not directly support this feature (i.e. SqlServer).</para>
+             </remarks>
+             <example>
+             The following example creates a select query which returns two columns from two inner joined tables and renders it to be executed on MySql
+             <code>
+             FromTerm tCustomers = FromTerm.Table("customers");
+             FromTerm tProducts = FromTerm.Table("products", "p");
+             FromTerm tOrders = FromTerm.Table("orders", "o");
+             
+             SelectQuery query = new SelectQuery();
+             query.Columns.Add(new SelectColumn("name", tCustomers));
+             query.Columns.Add(new SelectColumn("name", tProducts));
+             query.FromClause.BaseTable = tCustomers;
+             query.FromClause.Join(JoinType.Inner, query.FromClause.BaseTable, tOrders, "customerId", "customerId");
+             query.FromClause.Join(JoinType.Inner, tOrders, tProducts, "productId", "productId");
+             
+             MySqlRenderer renderer = new MySqlRenderer();
+            	string sql = renderer.RenderSelect(query);
+            	...
+             </code>
+            </example>
+             <example>
+             This example creates a select query which returns the second page of a result-set and renders it to be executed on SqlServer
+             <code>
+             
+             int totalRows = 50; //The total number of rows can be obtained using SelectQuery as well
+             
+             SelectQuery query = new SelectQuery();
+             
+             query.Columns.Add(new SelectColumn("name"));
+             query.FromPhrase.BaseTable = FromClause.Table("customers");
+             query.OrderByClauses.Add(new OrderByClause("name", null, OrderByDirection.Descending));
+             query.OrderByClauses.Add(new OrderByClause("birthDate", null, OrderByDirection.Ascending));
+             
+             SqlServerRenderer renderer = new SqlServerRenderer();
+            	sql = renderer.RenderPage(2, 10, totalRows, query);
+            	...
+             </code>
+            </example>
+        </member>
+        <member name="M:Reeb.SqlOM.SelectQuery.#ctor">
+            <summary>
+            Creates a new SelectQuery
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.SelectQuery.Validate">
+            <summary>
+            Validates the SelectQuery
+            </summary>
+            <remarks>
+            Sql.Net makes its best to validate a query before it is rendered or executed. 
+            Still, some errors and inconsistancies can only be found on later stages.
+            </remarks>
+        </member>
+        <member name="M:Reeb.SqlOM.SelectQuery.Clone">
+            <summary>
+            Clones the SelectQuery
+            </summary>
+            <returns>A new instance of SelectQuery which is exactly the same as the current one.</returns>
+        </member>
+        <member name="P:Reeb.SqlOM.SelectQuery.FromClause">
+            <summary>
+            Gets the FROM definition for this SelectQuery
+            </summary>
+        </member>
+        <member name="P:Reeb.SqlOM.SelectQuery.GroupByTerms">
+            <summary>
+            Gets the GROUP BY definition for this SelectQuery
+            </summary>
+        </member>
+        <member name="P:Reeb.SqlOM.SelectQuery.OrderByTerms">
+            <summary>
+            Gets the ORDER BY definition for this SelectQuery
+            </summary>
+        </member>
+        <member name="P:Reeb.SqlOM.SelectQuery.WherePhrase">
+            <summary>
+            Gets the WHERE conditions for this SelectQuery
+            </summary>
+        </member>
+        <member name="P:Reeb.SqlOM.SelectQuery.HavingPhrase">
+            <summary>
+            Gets the WHERE conditions for this SelectQuery
+            </summary>
+        </member>
+        <member name="P:Reeb.SqlOM.SelectQuery.Columns">
+            <summary>
+            Gets the collection of columns for this SelectQuery
+            </summary>
+        </member>
+        <member name="P:Reeb.SqlOM.SelectQuery.Top">
+            <summary>
+            Gets or sets the result-set row count limitation
+            </summary>
+            <remarks>
+            When Top is less then zero, no limitation will apply on the result-set. To limit
+            the number of rows returned by this query set Top to a positive integer or zero
+            </remarks>
+        </member>
+        <member name="P:Reeb.SqlOM.SelectQuery.GroupByWithRollup">
+            <summary>
+            Gets or sets the group by with rollup option for the query
+            </summary>
+            <remarks>
+            GroupByWithRollup property is only relevant for queries which perform group by and have aggregation columns.
+            When GroupByWithRollup is true the result set will include additional rows with sub total information. Consult SQL documentation for more details.
+            </remarks>
+        </member>
+        <member name="P:Reeb.SqlOM.SelectQuery.GroupByWithCube">
+            <summary>
+            Gets or sets the group by with cube option for the query. Not supported by all databases.
+            </summary>
+            <remarks>
+            GroupByWithCube property is only relevant for queries which perform group by and have aggregation columns.
+            When GroupByWithCube is true the result set will include additional rows with sub total information. GroupByWithCube even more data then <see cref="P:Reeb.SqlOM.SelectQuery.GroupByWithRollup">GroupByWithRollup</see>. Consult SQL documentation for more details.
+            <para>
+            Important! Not all databases support this option.
+            </para>
+            </remarks>
+        </member>
+        <member name="P:Reeb.SqlOM.SelectQuery.Distinct">
+            <summary>
+            Gets or sets wheather only distinct rows are to be returned.
+            </summary>
+        </member>
+        <member name="P:Reeb.SqlOM.SelectQuery.TableSpace">
+            <summary>
+            Gets or sets the common prefix for all tables in the query
+            </summary>
+            <remarks>
+            You might want to use <see cref="P:Reeb.SqlOM.SelectQuery.TableSpace"/> property to utilize SQL Server 2000
+            execution plan cache. For the cache to work in SQL Server 2000, all database objects in a query must be fully qualified.
+            Setting <see cref="P:Reeb.SqlOM.SelectQuery.TableSpace"/> property might releive of the duty to fully qualify all table names in the query.
+            </remarks>
+        </member>
+        <member name="T:Reeb.SqlOM.SqlDataType">
+            <summary>
+            Data type of a constant value
+            </summary>
+        </member>
+        <member name="F:Reeb.SqlOM.SqlDataType.String">
+            <summary>String value</summary>
+        </member>
+        <member name="F:Reeb.SqlOM.SqlDataType.Number">
+            <summary>Numeric value (int, double, float, decimal)</summary>
+        </member>
+        <member name="F:Reeb.SqlOM.SqlDataType.Date">
+            <summary>DateTime object</summary>
+        </member>
+        <member name="T:Reeb.SqlOM.SqlConstant">
+            <summary>
+            Represents a typed constant value.
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlConstant.#ctor(Reeb.SqlOM.SqlDataType,System.Object)">
+            <summary>
+            Creates a new SqlConstant instance
+            </summary>
+            <param name="type">Constant's date type</param>
+            <param name="val">Constant's value</param>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlConstant.Number(System.Double)">
+            <summary>
+            Creates a SqlConstant which represents a numeric value.
+            </summary>
+            <param name="val">Value of the expression</param>
+            <returns>A SqlConstant which represents a floating point value</returns>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlConstant.Number(System.Decimal)">
+            <summary>
+            Creates a SqlConstant which represents a numeric value.
+            </summary>
+            <param name="val">Value of the expression</param>
+            <returns>A SqlConstant which represents a decimal value</returns>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlConstant.Number(System.Int32)">
+            <summary>
+            Creates a SqlConstant which represents a numeric value.
+            </summary>
+            <param name="val">Value of the expression</param>
+            <returns>A SqlConstant which represents a numeric value</returns>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlConstant.String(System.String)">
+            <summary>
+            Creates a SqlConstant which represents a textual value.
+            </summary>
+            <param name="val">Value of the expression</param>
+            <returns>A SqlConstant which represents a textual value</returns>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlConstant.Date(System.DateTime)">
+            <summary>
+            Creates a SqlConstant which represents a date value.
+            </summary>
+            <param name="val">Value of the expression</param>
+            <returns>A SqlConstant which represents a date value</returns>
+        </member>
+        <member name="T:Reeb.SqlOM.SqlConstantCollection">
+            <summary>
+            A collection of elements of type SqlConstant
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlConstantCollection.#ctor">
+            <summary>
+            Initializes a new empty instance of the SqlConstantCollection class.
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlConstantCollection.#ctor(System.Int32)">
+            <summary>
+            Initializes a new empty instance of the SqlConstantCollection class with the specified initial capacity
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlConstantCollection.#ctor(Reeb.SqlOM.SqlConstant[])">
+            <summary>
+            Initializes a new instance of the SqlConstantCollection class, containing elements
+            copied from an array.
+            </summary>
+            <param name="items">
+            The array whose elements are to be added to the new SqlConstantCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlConstantCollection.#ctor(Reeb.SqlOM.SqlConstantCollection)">
+            <summary>
+            Initializes a new instance of the SqlConstantCollection class, containing elements
+            copied from another instance of SqlConstantCollection
+            </summary>
+            <param name="items">
+            The SqlConstantCollection whose elements are to be added to the new SqlConstantCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlConstantCollection.FromList(System.Collections.IList)">
+            <summary>
+            Creates a SqlConstantCollection from a list of values.
+            </summary>
+            <remarks>
+            The type of SqlConstant items in the collection is determined automatically.
+            See <see cref="M:Reeb.SqlOM.SqlConstantCollection.Add(System.Object)"/> method for more info.
+            </remarks>
+            <param name="values"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlConstantCollection.Add(System.Object)">
+            <summary>
+            Adds a value
+            </summary>
+            <param name="val">The value which is to be added</param>
+            <remarks>
+            This method automatically determins the type of the value and creates the appropriate SqlConstant object.
+            </remarks>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlConstantCollection.AddRange(Reeb.SqlOM.SqlConstant[])">
+            <summary>
+            Adds the elements of an array to the end of this SqlConstantCollection.
+            </summary>
+            <param name="items">
+            The array whose elements are to be added to the end of this SqlConstantCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlConstantCollection.AddRange(Reeb.SqlOM.SqlConstantCollection)">
+            <summary>
+            Adds the elements of another SqlConstantCollection to the end of this SqlConstantCollection.
+            </summary>
+            <param name="items">
+            The SqlConstantCollection whose elements are to be added to the end of this SqlConstantCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlConstantCollection.Add(Reeb.SqlOM.SqlConstant)">
+            <summary>
+            Adds an instance of type SqlConstant to the end of this SqlConstantCollection.
+            </summary>
+            <param name="value">
+            The SqlConstant to be added to the end of this SqlConstantCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlConstantCollection.Contains(Reeb.SqlOM.SqlConstant)">
+            <summary>
+            Determines whether a specfic SqlConstant value is in this SqlConstantCollection.
+            </summary>
+            <param name="value">
+            The SqlConstant value to locate in this SqlConstantCollection.
+            </param>
+            <returns>
+            true if value is found in this SqlConstantCollection;
+            false otherwise.
+            </returns>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlConstantCollection.IndexOf(Reeb.SqlOM.SqlConstant)">
+            <summary>
+            Return the zero-based index of the first occurrence of a specific value
+            in this SqlConstantCollection
+            </summary>
+            <param name="value">
+            The SqlConstant value to locate in the SqlConstantCollection.
+            </param>
+            <returns>
+            The zero-based index of the first occurrence of the _ELEMENT value if found;
+            -1 otherwise.
+            </returns>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlConstantCollection.Insert(System.Int32,Reeb.SqlOM.SqlConstant)">
+            <summary>
+            Inserts an element into the SqlConstantCollection at the specified index
+            </summary>
+            <param name="index">
+            The index at which the SqlConstant is to be inserted.
+            </param>
+            <param name="value">
+            The SqlConstant to insert.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlConstantCollection.Remove(Reeb.SqlOM.SqlConstant)">
+            <summary>
+            Removes the first occurrence of a specific SqlConstant from this SqlConstantCollection.
+            </summary>
+            <param name="value">
+            The SqlConstant value to remove from this SqlConstantCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlConstantCollection.GetEnumerator">
+            <summary>
+            Returns an enumerator that can iterate through the elements of this SqlConstantCollection.
+            </summary>
+            <returns>
+            An object that implements System.Collections.IEnumerator.
+            </returns>        
+        </member>
+        <member name="P:Reeb.SqlOM.SqlConstantCollection.Item(System.Int32)">
+            <summary>
+            Gets or sets the SqlConstant at the given index in this SqlConstantCollection.
+            </summary>
+        </member>
+        <member name="T:Reeb.SqlOM.SqlConstantCollection.Enumerator">
+            <summary>
+            Type-specific enumeration class, used by SqlConstantCollection.GetEnumerator.
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlConstantCollection.Enumerator.#ctor(Reeb.SqlOM.SqlConstantCollection)">
+            <summary>
+            
+            </summary>
+            <param name="collection"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlConstantCollection.Enumerator.MoveNext">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlConstantCollection.Enumerator.Reset">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Reeb.SqlOM.SqlConstantCollection.Enumerator.Current">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Reeb.SqlOM.SqlExpressionType">
+            <summary>
+            Describes the type of a <see cref="T:Reeb.SqlOM.SqlExpression"/>
+            </summary>
+        </member>
+        <member name="T:Reeb.SqlOM.SqlExpression">
+            <summary>
+            Describes one expression of a <see cref="T:Reeb.SqlOM.WhereTerm"/>
+            </summary>
+            <remarks>
+            SqlExpression has no public constructor. Use one of the supplied static methods to create the type
+            of the expression you need. 
+            <para>
+            <see cref="T:Reeb.SqlOM.SqlExpression"/> can represent a database field, or a static value. 
+            To create a <see cref="T:Reeb.SqlOM.SqlExpression"/> represnting a field use the <seealso cref="M:Reeb.SqlOM.SqlExpression.Field(System.String,Reeb.SqlOM.FromTerm)"/> method.
+            To create a static value, use one of the methods <see cref="M:Reeb.SqlOM.SqlExpression.String(System.String)"/>, <see cref="M:Reeb.SqlOM.SqlExpression.Date(System.DateTime)"/> or <see cref="M:Reeb.SqlOM.SqlExpression.Number(System.Double)"/> accordingly to the type of the value.
+            </para>
+            </remarks>
+            <example>
+            <code>
+            ...
+            query.WherePhrase.Terms.Add(WhereTerm.CreateCompare(SqlExpression.Field("name", tCustomers), SqlExpression.String("John"), CompareOperator.Equal));
+            ...
+            </code>
+            </example>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlExpression.Number(System.Double)">
+            <summary>
+            Creates a SqlExpression which represents a numeric value.
+            </summary>
+            <param name="val">Value of the expression</param>
+            <returns>A SqlExpression which represents a numeric value</returns>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlExpression.Number(System.Int32)">
+            <summary>
+            Creates a SqlExpression which represents a numeric value.
+            </summary>
+            <param name="val">Value of the expression</param>
+            <returns>A SqlExpression which represents a numeric value</returns>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlExpression.String(System.String)">
+            <summary>
+            Creates a SqlExpression which represents a textual value.
+            </summary>
+            <param name="val">Value of the expression</param>
+            <returns>A SqlExpression which represents a textual value</returns>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlExpression.Date(System.DateTime)">
+            <summary>
+            Creates a SqlExpression which represents a date value.
+            </summary>
+            <param name="val">Value of the expression</param>
+            <returns>A SqlExpression which represents a date value</returns>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlExpression.Constant(Reeb.SqlOM.SqlConstant)">
+            <summary>
+            Creates a SqlExpression which represents a constant typed value.
+            </summary>
+            <param name="val">SqlConstant instance</param>
+            <returns>A SqlExpression which represents a date value</returns>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlExpression.Constant(Reeb.SqlOM.SqlDataType,System.Object)">
+            <summary>
+            Creates a SqlExpression which represents a constant typed value
+            </summary>
+            <param name="dataType">Value's data type</param>
+            <param name="val">The value</param>
+            <returns></returns>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlExpression.Field(System.String,Reeb.SqlOM.FromTerm)">
+            <summary>
+            Creates a SqlExpression which represents a field in a database table.
+            </summary>
+            <param name="fieldName">Name of a field</param>
+            <param name="table">The table this field belongs to</param>
+            <returns></returns>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlExpression.Case(Reeb.SqlOM.CaseClause)">
+            <summary>
+            Creates a SqlExpression with a CASE statement.
+            </summary>
+            <param name="caseClause"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlExpression.IfNull(Reeb.SqlOM.SqlExpression,Reeb.SqlOM.SqlExpression)">
+            <summary>
+            Creates a SqlExpression with IfNull function.
+            </summary>
+            <param name="test">Expression to be checked for being NULL</param>
+            <param name="val">Substitution</param>
+            <returns></returns>
+            <remarks>
+            Works as SQL Server's ISNULL() function.
+            </remarks>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlExpression.Function(Reeb.SqlOM.SqlAggregationFunction,Reeb.SqlOM.SqlExpression)">
+            <summary>
+            Creates a SqlExpression with an aggergation function
+            </summary>
+            <param name="func">Aggregation function to be applied on the supplied expression</param>
+            <param name="param">Parameter of the aggregation function</param>
+            <returns></returns>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlExpression.Null">
+            <summary>
+            Creates a SqlExpression representing a NULL value
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlExpression.Field(System.String)">
+            <summary>
+            Creates a SqlExpression which represents a field in a database table.
+            </summary>
+            <param name="fieldName">Name of a field</param>
+            <returns></returns>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlExpression.SubQuery(System.String)">
+            <summary>
+            Creates a SqlExpression which represents a subquery.
+            </summary>
+            <param name="queryText">Text of the subquery.</param>
+            <returns>A new SqlExpression</returns>
+            <remarks>
+            In many cases you can use an inner or outer JOIN instead of a subquery. 
+            If you prefer using subqueries it is recomended that you construct the subquery
+            using another instance of <see cref="T:Reeb.SqlOM.SelectQuery"/>, render it using the correct 
+            renderer and pass the resulting SQL statement to the <paramref name="queryText"/> parameter.
+            </remarks>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlExpression.SubQuery(Reeb.SqlOM.SelectQuery)">
+            <summary>
+            Creates a SqlExpression which represents a subquery.
+            </summary>
+            <param name="query">A SelectQuery object</param>
+            <returns>A new SqlExpression</returns>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlExpression.Parameter(System.String)">
+            <summary>
+            Create a parameter placeholder.
+            </summary>
+            <param name="paramName"></param>
+            <returns></returns>
+            <remarks>
+            Correct parameter name depends on your specifc data provider. OLEDB expects
+            all parameters to be '?' and matches parameters to values based on their index.
+            SQL Server Native driver matches parameters by names and expects to find "@paramName"
+            parameter placeholder in the query.
+            </remarks>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlExpression.Raw(System.String)">
+            <summary>
+            Creates a SqlExpression with raw SQL
+            </summary>
+            <param name="sql"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Reeb.SqlOM.DistinctModifier">
+            <summary>
+            Encapsulates SQL DISTINCT or ALL modifiers
+            </summary>
+        </member>
+        <member name="F:Reeb.SqlOM.DistinctModifier.Distinct">
+            <summary>Only distinct rows will be returned</summary>
+        </member>
+        <member name="F:Reeb.SqlOM.DistinctModifier.All">
+            <summary>All rows will be returned</summary>
+        </member>
+        <member name="T:Reeb.SqlOM.SqlUnion">
+            <summary>
+            Encapsulates SQL UNION statement
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlUnion.#ctor">
+            <summary>
+            Creates a new SqlUnion
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlUnion.Add(Reeb.SqlOM.SelectQuery)">
+            <summary>
+            Adds a query to the UNION clause
+            </summary>
+            <param name="query">SelectQuery to be added</param>
+            <remarks>Query will be added with DistinctModifier.Distinct </remarks>
+        </member>
+        <member name="M:Reeb.SqlOM.SqlUnion.Add(Reeb.SqlOM.SelectQuery,Reeb.SqlOM.DistinctModifier)">
+            <summary>
+            Adds a query to the UNION clause with the specified DistinctModifier
+            </summary>
+            <param name="query">SelectQuery to be added</param>
+            <param name="repeatingAction">Distinct modifier</param>
+        </member>
+        <member name="T:Reeb.SqlOM.UpdateQuery">
+            <summary>
+            Encapsulates a SQL UPDATE statement
+            </summary>
+            <remarks>
+            Use UpdateQuery to update data in a database table.
+            Set <see cref="P:Reeb.SqlOM.UpdateQuery.TableName"/> to the table you would like to update, populate 
+            the <see cref="P:Reeb.SqlOM.UpdateQuery.Terms"/> collection with column-value pairs and define which rows 
+            should be affected using the <see cref="P:Reeb.SqlOM.UpdateQuery.WhereClause"/>.
+            </remarks>
+            <example>
+            <code>
+            UpdateQuery query = new UpdateQuery("products");
+            query.Terms.Add(new UpdateTerm("price", SqlExpression.Number(12.1)));
+            query.Terms.Add(new UpdateTerm("quantaty", SqlExpression.Field("quantaty")));
+            query.WhereClause.Terms.Add(WhereTerm.CreateCompare(SqlExpression.Field("productId"), SqlExpression.Number(1), CompareOperator.Equal) );
+            </code>
+            </example>
+        </member>
+        <member name="M:Reeb.SqlOM.UpdateQuery.#ctor">
+            <summary>
+            Creates a new UpdateQuery
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.UpdateQuery.#ctor(System.String)">
+            <summary>
+            Creates a new UpdateQuery
+            </summary>
+            <param name="tableName"></param>
+        </member>
+        <member name="M:Reeb.SqlOM.UpdateQuery.Validate">
+            <summary>
+            Validates UpdateQuery
+            </summary>
+        </member>
+        <member name="P:Reeb.SqlOM.UpdateQuery.Terms">
+            <summary>
+            Gets the terms collection for this UpdateQuery
+            </summary>
+            <remarks>
+            Terms specify which columns should be updated and to what values.
+            </remarks>
+        </member>
+        <member name="P:Reeb.SqlOM.UpdateQuery.WhereClause">
+            <summary>
+            Spicifies which rows are to be updated
+            </summary>
+        </member>
+        <member name="P:Reeb.SqlOM.UpdateQuery.TableName">
+            <summary>
+            Gets or set the name of a table to be updated
+            </summary>
+        </member>
+        <member name="T:Reeb.SqlOM.UpdateTerm">
+            <summary>
+            Encapsulates a column-value pair for UPDATE and INSERT statements
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.UpdateTerm.#ctor(System.String,Reeb.SqlOM.SqlExpression)">
+            <summary>
+            Creates an UpdateTerm
+            </summary>
+            <param name="fieldName">The name of the field to be updated</param>
+            <param name="val">New field value</param>
+        </member>
+        <member name="P:Reeb.SqlOM.UpdateTerm.FieldName">
+            <summary>
+            Gets the name of the field which is to be updated
+            </summary>
+        </member>
+        <member name="P:Reeb.SqlOM.UpdateTerm.Value">
+            <summary>
+            Gets the value the field will be updated to
+            </summary>
+        </member>
+        <member name="T:Reeb.SqlOM.UpdateTermCollection">
+            <summary>
+            A collection of elements of type UpdateTerm
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.UpdateTermCollection.#ctor">
+            <summary>
+            Initializes a new empty instance of the UpdateTermCollection class.
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.UpdateTermCollection.#ctor(Reeb.SqlOM.UpdateTerm[])">
+            <summary>
+            Initializes a new instance of the UpdateTermCollection class, containing elements
+            copied from an array.
+            </summary>
+            <param name="items">
+            The array whose elements are to be added to the new UpdateTermCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.UpdateTermCollection.#ctor(Reeb.SqlOM.UpdateTermCollection)">
+            <summary>
+            Initializes a new instance of the UpdateTermCollection class, containing elements
+            copied from another instance of UpdateTermCollection
+            </summary>
+            <param name="items">
+            The UpdateTermCollection whose elements are to be added to the new UpdateTermCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.UpdateTermCollection.AddRange(Reeb.SqlOM.UpdateTerm[])">
+            <summary>
+            Adds the elements of an array to the end of this UpdateTermCollection.
+            </summary>
+            <param name="items">
+            The array whose elements are to be added to the end of this UpdateTermCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.UpdateTermCollection.AddRange(Reeb.SqlOM.UpdateTermCollection)">
+            <summary>
+            Adds the elements of another UpdateTermCollection to the end of this UpdateTermCollection.
+            </summary>
+            <param name="items">
+            The UpdateTermCollection whose elements are to be added to the end of this UpdateTermCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.UpdateTermCollection.Add(Reeb.SqlOM.UpdateTerm)">
+            <summary>
+            Adds an instance of type UpdateTerm to the end of this UpdateTermCollection.
+            </summary>
+            <param name="value">
+            The UpdateTerm to be added to the end of this UpdateTermCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.UpdateTermCollection.Contains(Reeb.SqlOM.UpdateTerm)">
+            <summary>
+            Determines whether a specfic UpdateTerm value is in this UpdateTermCollection.
+            </summary>
+            <param name="value">
+            The UpdateTerm value to locate in this UpdateTermCollection.
+            </param>
+            <returns>
+            true if value is found in this UpdateTermCollection;
+            false otherwise.
+            </returns>
+        </member>
+        <member name="M:Reeb.SqlOM.UpdateTermCollection.IndexOf(Reeb.SqlOM.UpdateTerm)">
+            <summary>
+            Return the zero-based index of the first occurrence of a specific value
+            in this UpdateTermCollection
+            </summary>
+            <param name="value">
+            The UpdateTerm value to locate in the UpdateTermCollection.
+            </param>
+            <returns>
+            The zero-based index of the first occurrence of the _ELEMENT value if found;
+            -1 otherwise.
+            </returns>
+        </member>
+        <member name="M:Reeb.SqlOM.UpdateTermCollection.Insert(System.Int32,Reeb.SqlOM.UpdateTerm)">
+            <summary>
+            Inserts an element into the UpdateTermCollection at the specified index
+            </summary>
+            <param name="index">
+            The index at which the UpdateTerm is to be inserted.
+            </param>
+            <param name="value">
+            The UpdateTerm to insert.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.UpdateTermCollection.Remove(Reeb.SqlOM.UpdateTerm)">
+            <summary>
+            Removes the first occurrence of a specific UpdateTerm from this UpdateTermCollection.
+            </summary>
+            <param name="value">
+            The UpdateTerm value to remove from this UpdateTermCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.UpdateTermCollection.GetEnumerator">
+            <summary>
+            Returns an enumerator that can iterate through the elements of this UpdateTermCollection.
+            </summary>
+            <returns>
+            An object that implements System.Collections.IEnumerator.
+            </returns>        
+        </member>
+        <member name="P:Reeb.SqlOM.UpdateTermCollection.Item(System.Int32)">
+            <summary>
+            Gets or sets the UpdateTerm at the given index in this UpdateTermCollection.
+            </summary>
+        </member>
+        <member name="T:Reeb.SqlOM.UpdateTermCollection.Enumerator">
+            <summary>
+            Type-specific enumeration class, used by UpdateTermCollection.GetEnumerator.
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.UpdateTermCollection.Enumerator.#ctor(Reeb.SqlOM.UpdateTermCollection)">
+            <summary></summary>
+        </member>
+        <member name="M:Reeb.SqlOM.UpdateTermCollection.Enumerator.MoveNext">
+            <summary></summary>
+        </member>
+        <member name="M:Reeb.SqlOM.UpdateTermCollection.Enumerator.Reset">
+            <summary></summary>
+        </member>
+        <member name="P:Reeb.SqlOM.UpdateTermCollection.Enumerator.Current">
+            <summary></summary>
+        </member>
+        <member name="T:Reeb.SqlOM.WhereClauseRelationship">
+            <summary>
+            Describes the logical relationship between terms of a WHERE clause
+            </summary>
+        </member>
+        <member name="F:Reeb.SqlOM.WhereClauseRelationship.And">
+            <summary>Logical And</summary>
+        </member>
+        <member name="F:Reeb.SqlOM.WhereClauseRelationship.Or">
+            <summary>Logical Or</summary>
+        </member>
+        <member name="T:Reeb.SqlOM.WhereClause">
+            <summary>
+            Describes the WHERE clause of a SELECT statement
+            </summary>
+            <remarks>
+            Using WhereClause you can abstractly define most common SQL conditional expressions.
+            A WhereClause consists of individual <see cref="T:Reeb.SqlOM.WhereTerm">terms</see> and <see cref="T:Reeb.SqlOM.WhereClause">sub clauses</see>.
+            Between all terms and sub clauses of the same clause exists a single logical <see cref="T:Reeb.SqlOM.WhereClauseRelationship">relationship</see>. 
+            To create a group of terms with a different relationship, create a sub clause with the desired relationship and add it to the relevant <see cref="P:Reeb.SqlOM.WhereClause.SubClauses"/>collection.
+            Terms of a where clause are represnted by the <see cref="T:Reeb.SqlOM.WhereTerm"/> class while the sub clauses are represnted by the same <see cref="T:Reeb.SqlOM.WhereClause"/> class.
+            </remarks>
+            <example>
+            The following example attempts to demonstrate some of the most common usages of WhereClause and WhereTerm classes
+            <code>
+            FromTerm tCustomers = FromTerm.Table("customers", "c");
+            FromTerm tProducts = FromTerm.Table("products", "p");
+            FromTerm tOrders = FromTerm.Table("orders", "o");
+            
+            SelectQuery query = new SelectQuery();
+            
+            query.Columns.Add(new SelectColumn("name", tCustomers));
+            query.Columns.Add(new SelectColumn("name", tProducts));
+            query.Columns.Add(new SelectColumn("price", tProducts));
+            
+            query.FromClause.BaseTable = tCustomers;
+            query.FromClause.Join(JoinType.Left, tCustomers, tOrders, "customerId", "customerId");
+            query.FromClause.Join(JoinType.Inner, tOrders, tProducts, "productId", "productId");
+            		
+            query.WherePhrase.Terms.Add(WhereTerm.CreateCompare(SqlExpression.Field("name", tCustomers), SqlExpression.String("John"), CompareOperator.Equal));
+            query.WherePhrase.Terms.Add(WhereTerm.CreateCompare(SqlExpression.Field("name", tCustomers), SqlExpression.String("J%"), CompareOperator.Like));
+            query.WherePhrase.Terms.Add(WhereTerm.CreateCompare(SqlExpression.Date(DateTime.Now), SqlExpression.Field("date", tOrders), CompareOperator.Greater));
+            query.WherePhrase.Terms.Add(WhereTerm.CreateCompare(SqlExpression.Number(1), SqlExpression.Number(1), CompareOperator.BitwiseAnd));
+            		
+            WhereClause group = new WhereClause(WhereClauseRelationship.Or);
+            		
+            group.Terms.Add(WhereTerm.CreateBetween(SqlExpression.Field("price", tProducts), SqlExpression.Number(1), SqlExpression.Number(10)));
+            group.Terms.Add(WhereTerm.CreateIn(SqlExpression.Field("name", tProducts), new string[] {"Nail", "Hamer", "Skrewdriver"}));
+            		
+            query.WherePhrase.SubClauses.Add(group);
+            
+            ...
+            </code>
+            </example>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereClause.#ctor(Reeb.SqlOM.WhereClauseRelationship)">
+            <summary>
+            Creates a new WhereClause
+            </summary>
+            <param name="relationship">Relationship between all the terms and sub clauses of this clause</param>
+            <example>
+            <code>
+            SelectQuery query = new SelectQuery();
+            ...
+            query.WherePhrase.Terms.Add(WhereTerm.CreateCompare(SqlExpression.Field("name", tCustomers), SqlExpression.String("John"), CompareOperator.Equal));
+            WhereClause group = new WhereClause(WhereClauseRelationship.Or);
+            group.Terms.Add(WhereTerm.CreateBetween(SqlExpression.Field("price", tProducts), SqlExpression.Number(1), SqlExpression.Number(10)));
+            group.Terms.Add(WhereTerm.CreateIn(SqlExpression.Field("name", tProducts), new string[] {"Nail", "Hamer", "Skrewdriver"}));
+            query.WherePhrase.SubClauses.Add(group);
+            </code>
+            </example>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereClause.Clone">
+            <summary>
+            Creates a copy of this WhereClause
+            </summary>
+            <returns>A new WhereClause which is exactly the same as the current one</returns>
+        </member>
+        <member name="P:Reeb.SqlOM.WhereClause.Relationship">
+            <summary>
+            Gets the relationship for this clause
+            </summary>
+            <remarks>
+            Where clause relationship defines what kind of logical condition exists between all terms and sub clauses of this WhereClause
+            </remarks>
+        </member>
+        <member name="P:Reeb.SqlOM.WhereClause.Terms">
+            <summary>
+            Gets the terms collection for this WherePhrase
+            </summary>
+        </member>
+        <member name="P:Reeb.SqlOM.WhereClause.SubClauses">
+            <summary>
+            Gets the sub clauses collection for this WherePhrase
+            </summary>
+        </member>
+        <member name="P:Reeb.SqlOM.WhereClause.IsEmpty">
+            <summary>
+            Returns true if this WhereClause and its descendant sub clauses have no terms
+            </summary>
+        </member>
+        <member name="T:Reeb.SqlOM.WhereClauseCollection">
+            <summary>
+              A collection that stores <see cref="T:Reeb.SqlOM.WhereClause"/> objects.
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereClauseCollection.#ctor">
+            <summary>
+              Initializes a new instance of <see cref="T:Reeb.SqlOM.WhereClauseCollection"/>.
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereClauseCollection.#ctor(Reeb.SqlOM.WhereClauseCollection)">
+            <summary>
+              Initializes a new instance of <see cref="T:Reeb.SqlOM.WhereClauseCollection"/> based on another <see cref="T:Reeb.SqlOM.WhereClauseCollection"/>.
+            </summary>
+            <param name="val">
+              A <see cref="T:Reeb.SqlOM.WhereClauseCollection"/> from which the contents are copied
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereClauseCollection.#ctor(Reeb.SqlOM.WhereClause[])">
+            <summary>
+              Initializes a new instance of <see cref="T:Reeb.SqlOM.WhereClauseCollection"/> containing any array of <see cref="T:Reeb.SqlOM.WhereClause"/> objects.
+            </summary>
+            <param name="val">
+                  A array of <see cref="T:Reeb.SqlOM.WhereClause"/> objects with which to intialize the collection
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereClauseCollection.Add(Reeb.SqlOM.WhereClause)">
+            <summary>
+              Adds a <see cref="T:Reeb.SqlOM.WhereClause"/> with the specified value to the 
+              <see cref="T:Reeb.SqlOM.WhereClauseCollection"/>.
+            </summary>
+            <param name="val">The <see cref="T:Reeb.SqlOM.WhereClause"/> to add.</param>
+            <returns>The index at which the new element was inserted.</returns>
+            <seealso cref="M:Reeb.SqlOM.WhereClauseCollection.AddRange(Reeb.SqlOM.WhereClause[])"/>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereClauseCollection.AddRange(Reeb.SqlOM.WhereClause[])">
+            <summary>
+              Copies the elements of an array to the end of the <see cref="T:Reeb.SqlOM.WhereClauseCollection"/>.
+            </summary>
+            <param name="val">
+               An array of type <see cref="T:Reeb.SqlOM.WhereClause"/> containing the objects to add to the collection.
+            </param>
+            <seealso cref="M:Reeb.SqlOM.WhereClauseCollection.Add(Reeb.SqlOM.WhereClause)"/>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereClauseCollection.AddRange(Reeb.SqlOM.WhereClauseCollection)">
+            <summary>
+              Adds the contents of another <see cref="T:Reeb.SqlOM.WhereClauseCollection"/> to the end of the collection.
+            </summary>
+            <param name="val">
+               A <see cref="T:Reeb.SqlOM.WhereClauseCollection"/> containing the objects to add to the collection.
+            </param>
+            <seealso cref="M:Reeb.SqlOM.WhereClauseCollection.Add(Reeb.SqlOM.WhereClause)"/>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereClauseCollection.Contains(Reeb.SqlOM.WhereClause)">
+            <summary>
+              Gets a value indicating whether the 
+               <see cref="T:Reeb.SqlOM.WhereClauseCollection"/> contains the specified <see cref="T:Reeb.SqlOM.WhereClause"/>.
+            </summary>
+            <param name="val">The <see cref="T:Reeb.SqlOM.WhereClause"/> to locate.</param>
+            <returns>
+            <see langword="true"/> if the <see cref="T:Reeb.SqlOM.WhereClause"/> is contained in the collection; 
+              otherwise, <see langword="false"/>.
+            </returns>
+            <seealso cref="M:Reeb.SqlOM.WhereClauseCollection.IndexOf(Reeb.SqlOM.WhereClause)"/>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereClauseCollection.CopyTo(Reeb.SqlOM.WhereClause[],System.Int32)">
+            <summary>
+              Copies the <see cref="T:Reeb.SqlOM.WhereClauseCollection"/> values to a one-dimensional <see cref="T:System.Array"/> instance at the 
+               specified index.
+            </summary>
+            <param name="array">The one-dimensional <see cref="T:System.Array"/> that is the destination of the values copied from <see cref="T:Reeb.SqlOM.WhereClauseCollection"/>.</param>
+            <param name="index">The index in <paramref name="array"/> where copying begins.</param>
+            <exception cref="T:System.ArgumentException">
+              <para><paramref name="array"/> is multidimensional.</para>
+              <para>-or-</para>
+              <para>The number of elements in the <see cref="T:Reeb.SqlOM.WhereClauseCollection"/> is greater than
+                    the available space between <paramref name="arrayIndex"/> and the end of
+                    <paramref name="array"/>.</para>
+            </exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="array"/> is <see langword="null"/>. </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="arrayIndex"/> is less than <paramref name="array"/>'s lowbound. </exception>
+            <seealso cref="T:System.Array"/>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereClauseCollection.IndexOf(Reeb.SqlOM.WhereClause)">
+            <summary>
+               Returns the index of a <see cref="T:Reeb.SqlOM.WhereClause"/> in 
+                  the <see cref="T:Reeb.SqlOM.WhereClauseCollection"/>.
+            </summary>
+            <param name="val">The <see cref="T:Reeb.SqlOM.WhereClause"/> to locate.</param>
+            <returns>
+              The index of the <see cref="T:Reeb.SqlOM.WhereClause"/> of <paramref name="val"/> in the 
+              <see cref="T:Reeb.SqlOM.WhereClauseCollection"/>, if found; otherwise, -1.
+            </returns>
+            <seealso cref="M:Reeb.SqlOM.WhereClauseCollection.Contains(Reeb.SqlOM.WhereClause)"/>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereClauseCollection.Insert(System.Int32,Reeb.SqlOM.WhereClause)">
+            <summary>
+              Inserts a <see cref="T:Reeb.SqlOM.WhereClause"/> into the <see cref="T:Reeb.SqlOM.WhereClauseCollection"/> at the specified index.
+            </summary>
+            <param name="index">The zero-based index where <paramref name="val"/> should be inserted.</param>
+            <param name="val">The <see cref="T:Reeb.SqlOM.WhereClause"/> to insert.</param>
+            <seealso cref="M:Reeb.SqlOM.WhereClauseCollection.Add(Reeb.SqlOM.WhereClause)"/>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereClauseCollection.GetEnumerator">
+            <summary>
+             Returns an enumerator that can iterate through the <see cref="T:Reeb.SqlOM.WhereClauseCollection"/>.
+            </summary>
+            <seealso cref="T:System.Collections.IEnumerator"/>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereClauseCollection.Remove(Reeb.SqlOM.WhereClause)">
+            <summary>
+              Removes a specific <see cref="T:Reeb.SqlOM.WhereClause"/> from the <see cref="T:Reeb.SqlOM.WhereClauseCollection"/>.
+            </summary>
+            <param name="val">The <see cref="T:Reeb.SqlOM.WhereClause"/> to remove from the <see cref="T:Reeb.SqlOM.WhereClauseCollection"/>.</param>
+            <exception cref="T:System.ArgumentException"><paramref name="val"/> is not found in the Collection.</exception>
+        </member>
+        <member name="P:Reeb.SqlOM.WhereClauseCollection.Item(System.Int32)">
+            <summary>
+              Represents the entry at the specified index of the <see cref="T:Reeb.SqlOM.WhereClause"/>.
+            </summary>
+            <param name="index">The zero-based index of the entry to locate in the collection.</param>
+            <value>The entry at the specified index of the collection.</value>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is outside the valid range of indexes for the collection.</exception>
+        </member>
+        <member name="T:Reeb.SqlOM.WhereClauseCollection.WhereClauseGroupEnumerator">
+            <summary>
+              Enumerator that can iterate through a WhereClauseGroupCollection.
+            </summary>
+            <seealso cref="T:System.Collections.IEnumerator"/>
+            <seealso cref="T:Reeb.SqlOM.WhereClauseCollection"/>
+            <seealso cref="T:Reeb.SqlOM.WhereClause"/>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereClauseCollection.WhereClauseGroupEnumerator.#ctor(Reeb.SqlOM.WhereClauseCollection)">
+            <summary>
+              Initializes a new instance of <see cref="T:Reeb.SqlOM.WhereClauseCollection.WhereClauseGroupEnumerator"/>.
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereClauseCollection.WhereClauseGroupEnumerator.MoveNext">
+            <summary>
+              Advances the enumerator to the next <see cref="T:Reeb.SqlOM.WhereClause"/> of the <see cref="T:Reeb.SqlOM.WhereClauseCollection"/>.
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereClauseCollection.WhereClauseGroupEnumerator.Reset">
+            <summary>
+              Sets the enumerator to its initial position, which is before the first element in the <see cref="T:Reeb.SqlOM.WhereClauseCollection"/>.
+            </summary>
+        </member>
+        <member name="P:Reeb.SqlOM.WhereClauseCollection.WhereClauseGroupEnumerator.Current">
+            <summary>
+              Gets the current <see cref="T:Reeb.SqlOM.WhereClause"/> in the <seealso cref="T:Reeb.SqlOM.WhereClauseCollection"/>.
+            </summary>
+        </member>
+        <member name="T:Reeb.SqlOM.WhereTerm">
+            <summary>
+            Represents one term in a WHERE clause
+            </summary>
+            <remarks>
+            <see cref="T:Reeb.SqlOM.WhereTerm"/> usually consists of one or more <see cref="T:Reeb.SqlOM.SqlExpression"/> objects and an a conditional operator which applies to those expressions.
+            <see cref="T:Reeb.SqlOM.WhereTerm"/> has no public constructor. Use one of the supplied static methods to create a term. 
+            <para>
+            Use <see cref="M:Reeb.SqlOM.WhereTerm.CreateCompare(Reeb.SqlOM.SqlExpression,Reeb.SqlOM.SqlExpression,Reeb.SqlOM.CompareOperator)"/> to create a comparison term. A comparison term can apply one of <see cref="T:Reeb.SqlOM.CompareOperator"/> operators on the supplied expressions.
+            Use <see cref="M:Reeb.SqlOM.WhereTerm.CreateIn(Reeb.SqlOM.SqlExpression,System.String)"/> to create a term which checks wheather an expression exists in a list of supplied values.
+            Use <see cref="M:Reeb.SqlOM.WhereTerm.CreateBetween(Reeb.SqlOM.SqlExpression,Reeb.SqlOM.SqlExpression,Reeb.SqlOM.SqlExpression)"/> to create a term which checks wheather an expression value is between a supplied lower and upper bounds.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereTerm.CreateCompare(Reeb.SqlOM.SqlExpression,Reeb.SqlOM.SqlExpression,Reeb.SqlOM.CompareOperator)">
+            <summary>
+            Creates a comparison WhereTerm.
+            </summary>
+            <param name="expr1">Expression on the left side of the operator</param>
+            <param name="expr2">Expression on the right side of the operator</param>
+            <param name="op">Conditional operator to be applied on the expressions</param>
+            <returns>A new conditional WhereTerm</returns>
+            <remarks>
+            A comparison term compares two expression on the basis of their values. Expressions can be of any type but their results must be of comparible types. 
+            For instance, you can not compare a database field of type 'date' and a static value of type 'int'.
+            </remarks>
+            <example>
+            <code>
+            ...
+            query.WherePhrase.Terms.Add(WhereTerm.CreateCompare(SqlExpression.Field("name", tCustomers), SqlExpression.String("J%"), CompareOperator.Like));
+            </code>
+            </example>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereTerm.CreateIn(Reeb.SqlOM.SqlExpression,System.String)">
+            <summary>
+            Creates a WhereTerm which represents SQL IN clause
+            </summary>
+            <param name="expr">Expression to be looked up</param>
+            <param name="sql">Sub query</param>
+            <returns></returns>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereTerm.CreateIn(Reeb.SqlOM.SqlExpression,Reeb.SqlOM.SqlConstantCollection)">
+            <summary>
+            Creates a WhereTerm which represents SQL IN clause
+            </summary>
+            <param name="expr">Expression to be looked up</param>
+            <param name="values">List of values</param>
+            <returns></returns>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereTerm.CreateNotIn(Reeb.SqlOM.SqlExpression,System.String)">
+            <summary>
+            Creates a WhereTerm which represents SQL NOT IN clause
+            </summary>
+            <param name="expr">Expression to be looked up</param>
+            <param name="sql">Sub query</param>
+            <returns></returns>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereTerm.CreateNotIn(Reeb.SqlOM.SqlExpression,Reeb.SqlOM.SqlConstantCollection)">
+            <summary>
+            Creates a WhereTerm which represents SQL NOT IN clause
+            </summary>
+            <param name="expr">Expression to be looked up</param>
+            <param name="values"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereTerm.CreateIsNull(Reeb.SqlOM.SqlExpression)">
+            <summary>
+            Creates a WhereTerm which returns TRUE if an expression is NULL
+            </summary>
+            <param name="expr">Expression to be evaluated</param>
+            <returns></returns>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereTerm.CreateIsNotNull(Reeb.SqlOM.SqlExpression)">
+            <summary>
+            Creates a WhereTerm which returns TRUE if an expression is NOT NULL
+            </summary>
+            <param name="expr"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereTerm.CreateExists(System.String)">
+            <summary>
+            Creates a WhereTerm which encapsulates SQL EXISTS clause
+            </summary>
+            <param name="sql">Sub query for the EXISTS clause</param>
+            <returns></returns>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereTerm.CreateNotExists(System.String)">
+            <summary>
+            Creates a WhereTerm which encapsulates SQL NOT EXISTS clause
+            </summary>
+            <param name="sql">Sub query for the NOT EXISTS clause</param>
+            <returns></returns>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereTerm.CreateBetween(Reeb.SqlOM.SqlExpression,Reeb.SqlOM.SqlExpression,Reeb.SqlOM.SqlExpression)">
+            <summary>
+            Creates a WhereTerm which checks weather a value is in a specifed range.
+            </summary>
+            <param name="expr">Expression which yeilds the value to be checked</param>
+            <param name="lowBound">Expression which yeilds the low bound of the range</param>
+            <param name="highBound">Expression which yeilds the high bound of the range</param>
+            <returns>A new WhereTerm</returns>
+            <remarks>
+            CreateBetween only accepts expressions which yeild a 'Date' or 'Number' values.
+            All expressions must be of compatible types.
+            </remarks>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereTerm.Clone">
+            <summary>
+            Creates a copy of this WhereTerm
+            </summary>
+            <returns>A new WhereTerm which exactly the same as the current one.</returns>
+        </member>
+        <member name="T:Reeb.SqlOM.WhereTermCollection">
+            <summary>
+              A collection that stores <see cref="T:Reeb.SqlOM.WhereTerm"/> objects.
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereTermCollection.#ctor">
+            <summary>
+              Initializes a new instance of <see cref="T:Reeb.SqlOM.WhereTermCollection"/>.
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereTermCollection.#ctor(Reeb.SqlOM.WhereTermCollection)">
+            <summary>
+              Initializes a new instance of <see cref="T:Reeb.SqlOM.WhereTermCollection"/> based on another <see cref="T:Reeb.SqlOM.WhereTermCollection"/>.
+            </summary>
+            <param name="val">
+              A <see cref="T:Reeb.SqlOM.WhereTermCollection"/> from which the contents are copied
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereTermCollection.#ctor(Reeb.SqlOM.WhereTerm[])">
+            <summary>
+              Initializes a new instance of <see cref="T:Reeb.SqlOM.WhereTermCollection"/> containing any array of <see cref="T:Reeb.SqlOM.WhereTerm"/> objects.
+            </summary>
+            <param name="val">
+                  A array of <see cref="T:Reeb.SqlOM.WhereTerm"/> objects with which to intialize the collection
+            </param>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereTermCollection.Add(Reeb.SqlOM.WhereTerm)">
+            <summary>
+              Adds a <see cref="T:Reeb.SqlOM.WhereTerm"/> with the specified value to the 
+              <see cref="T:Reeb.SqlOM.WhereTermCollection"/>.
+            </summary>
+            <param name="val">The <see cref="T:Reeb.SqlOM.WhereTerm"/> to add.</param>
+            <returns>The index at which the new element was inserted.</returns>
+            <seealso cref="M:Reeb.SqlOM.WhereTermCollection.AddRange(Reeb.SqlOM.WhereTerm[])"/>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereTermCollection.AddRange(Reeb.SqlOM.WhereTerm[])">
+            <summary>
+              Copies the elements of an array to the end of the <see cref="T:Reeb.SqlOM.WhereTermCollection"/>.
+            </summary>
+            <param name="val">
+               An array of type <see cref="T:Reeb.SqlOM.WhereTerm"/> containing the objects to add to the collection.
+            </param>
+            <seealso cref="M:Reeb.SqlOM.WhereTermCollection.Add(Reeb.SqlOM.WhereTerm)"/>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereTermCollection.AddRange(Reeb.SqlOM.WhereTermCollection)">
+            <summary>
+              Adds the contents of another <see cref="T:Reeb.SqlOM.WhereTermCollection"/> to the end of the collection.
+            </summary>
+            <param name="val">
+               A <see cref="T:Reeb.SqlOM.WhereTermCollection"/> containing the objects to add to the collection.
+            </param>
+            <seealso cref="M:Reeb.SqlOM.WhereTermCollection.Add(Reeb.SqlOM.WhereTerm)"/>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereTermCollection.Contains(Reeb.SqlOM.WhereTerm)">
+            <summary>
+              Gets a value indicating whether the 
+               <see cref="T:Reeb.SqlOM.WhereTermCollection"/> contains the specified <see cref="T:Reeb.SqlOM.WhereTerm"/>.
+            </summary>
+            <param name="val">The <see cref="T:Reeb.SqlOM.WhereTerm"/> to locate.</param>
+            <returns>
+            <see langword="true"/> if the <see cref="T:Reeb.SqlOM.WhereTerm"/> is contained in the collection; 
+              otherwise, <see langword="false"/>.
+            </returns>
+            <seealso cref="M:Reeb.SqlOM.WhereTermCollection.IndexOf(Reeb.SqlOM.WhereTerm)"/>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereTermCollection.CopyTo(Reeb.SqlOM.WhereTerm[],System.Int32)">
+            <summary>
+              Copies the <see cref="T:Reeb.SqlOM.WhereTermCollection"/> values to a one-dimensional <see cref="T:System.Array"/> instance at the 
+               specified index.
+            </summary>
+            <param name="array">The one-dimensional <see cref="T:System.Array"/> that is the destination of the values copied from <see cref="T:Reeb.SqlOM.WhereTermCollection"/>.</param>
+            <param name="index">The index in <paramref name="array"/> where copying begins.</param>
+            <exception cref="T:System.ArgumentException">
+              <para><paramref name="array"/> is multidimensional.</para>
+              <para>-or-</para>
+              <para>The number of elements in the <see cref="T:Reeb.SqlOM.WhereTermCollection"/> is greater than
+                    the available space between <paramref name="arrayIndex"/> and the end of
+                    <paramref name="array"/>.</para>
+            </exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="array"/> is <see langword="null"/>. </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="arrayIndex"/> is less than <paramref name="array"/>'s lowbound. </exception>
+            <seealso cref="T:System.Array"/>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereTermCollection.IndexOf(Reeb.SqlOM.WhereTerm)">
+            <summary>
+               Returns the index of a <see cref="T:Reeb.SqlOM.WhereTerm"/> in 
+                  the <see cref="T:Reeb.SqlOM.WhereTermCollection"/>.
+            </summary>
+            <param name="val">The <see cref="T:Reeb.SqlOM.WhereTerm"/> to locate.</param>
+            <returns>
+              The index of the <see cref="T:Reeb.SqlOM.WhereTerm"/> of <paramref name="val"/> in the 
+              <see cref="T:Reeb.SqlOM.WhereTermCollection"/>, if found; otherwise, -1.
+            </returns>
+            <seealso cref="M:Reeb.SqlOM.WhereTermCollection.Contains(Reeb.SqlOM.WhereTerm)"/>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereTermCollection.Insert(System.Int32,Reeb.SqlOM.WhereTerm)">
+            <summary>
+              Inserts a <see cref="T:Reeb.SqlOM.WhereTerm"/> into the <see cref="T:Reeb.SqlOM.WhereTermCollection"/> at the specified index.
+            </summary>
+            <param name="index">The zero-based index where <paramref name="val"/> should be inserted.</param>
+            <param name="val">The <see cref="T:Reeb.SqlOM.WhereTerm"/> to insert.</param>
+            <seealso cref="M:Reeb.SqlOM.WhereTermCollection.Add(Reeb.SqlOM.WhereTerm)"/>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereTermCollection.GetEnumerator">
+            <summary>
+             Returns an enumerator that can iterate through the <see cref="T:Reeb.SqlOM.WhereTermCollection"/>.
+            </summary>
+            <seealso cref="T:System.Collections.IEnumerator"/>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereTermCollection.Remove(Reeb.SqlOM.WhereTerm)">
+            <summary>
+              Removes a specific <see cref="T:Reeb.SqlOM.WhereTerm"/> from the <see cref="T:Reeb.SqlOM.WhereTermCollection"/>.
+            </summary>
+            <param name="val">The <see cref="T:Reeb.SqlOM.WhereTerm"/> to remove from the <see cref="T:Reeb.SqlOM.WhereTermCollection"/>.</param>
+            <exception cref="T:System.ArgumentException"><paramref name="val"/> is not found in the Collection.</exception>
+        </member>
+        <member name="P:Reeb.SqlOM.WhereTermCollection.Item(System.Int32)">
+            <summary>
+              Represents the entry at the specified index of the <see cref="T:Reeb.SqlOM.WhereTerm"/>.
+            </summary>
+            <param name="index">The zero-based index of the entry to locate in the collection.</param>
+            <value>The entry at the specified index of the collection.</value>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is outside the valid range of indexes for the collection.</exception>
+        </member>
+        <member name="T:Reeb.SqlOM.WhereTermCollection.WhereClauseEnumerator">
+            <summary>
+              Enumerator that can iterate through a WhereClauseCollection.
+            </summary>
+            <seealso cref="T:System.Collections.IEnumerator"/>
+            <seealso cref="T:Reeb.SqlOM.WhereTermCollection"/>
+            <seealso cref="T:Reeb.SqlOM.WhereTerm"/>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereTermCollection.WhereClauseEnumerator.#ctor(Reeb.SqlOM.WhereTermCollection)">
+            <summary>
+              Initializes a new instance of <see cref="T:Reeb.SqlOM.WhereTermCollection.WhereClauseEnumerator"/>.
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereTermCollection.WhereClauseEnumerator.MoveNext">
+            <summary>
+              Advances the enumerator to the next <see cref="T:Reeb.SqlOM.WhereTerm"/> of the <see cref="T:Reeb.SqlOM.WhereTermCollection"/>.
+            </summary>
+        </member>
+        <member name="M:Reeb.SqlOM.WhereTermCollection.WhereClauseEnumerator.Reset">
+            <summary>
+              Sets the enumerator to its initial position, which is before the first element in the <see cref="T:Reeb.SqlOM.WhereTermCollection"/>.
+            </summary>
+        </member>
+        <member name="P:Reeb.SqlOM.WhereTermCollection.WhereClauseEnumerator.Current">
+            <summary>
+              Gets the current <see cref="T:Reeb.SqlOM.WhereTerm"/> in the <seealso cref="T:Reeb.SqlOM.WhereTermCollection"/>.
+            </summary>
+        </member>
+    </members>
+</doc>

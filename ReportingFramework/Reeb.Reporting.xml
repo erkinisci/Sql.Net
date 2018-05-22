@@ -1,0 +1,659 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Reeb.Reporting</name>
+    </assembly>
+    <members>
+        <member name="T:Reeb.Reporting.PivotTableException">
+            <summary>
+            General exception for pivot table processing
+            </summary>
+        </member>
+        <member name="M:Reeb.Reporting.PivotTableException.#ctor(System.String)">
+            <summary>
+            Creates a new PivotTableException
+            </summary>
+            <param name="text"></param>
+        </member>
+        <member name="T:Reeb.Reporting.PivotTransformException">
+            <summary>
+            General exception for pivot table processing
+            </summary>
+        </member>
+        <member name="M:Reeb.Reporting.PivotTransformException.#ctor(System.String)">
+            <summary>
+            Creates a new PivotTransformException
+            </summary>
+            <param name="text"></param>
+        </member>
+        <member name="T:Reeb.Reporting.FiscalQuarter">
+            <summary>
+            Encapsulates alternative quarter definition
+            </summary>
+            <remarks>
+            Some enterprises define their fiscal quarters differently then calendar quarters.
+            Use the <see cref="P:Reeb.Reporting.FiscalQuarter.StartDay"/> and <see cref="P:Reeb.Reporting.FiscalQuarter.StartMonth"/> static properties to set the begining of the fiscal quarter.
+            </remarks>
+        </member>
+        <member name="M:Reeb.Reporting.FiscalQuarter.#ctor">
+            <summary>
+            Creates a new FiscalQuarter
+            </summary>
+        </member>
+        <member name="M:Reeb.Reporting.FiscalQuarter.GetCurrentQuarter">
+            <summary>
+            Returns the current fiscal quarter index
+            </summary>
+            <returns>Current fiscal quarter index</returns>
+        </member>
+        <member name="M:Reeb.Reporting.FiscalQuarter.GetQuarterForDate(System.DateTime)">
+            <summary>
+            Returns fiscal quarter index which the specified date falls into
+            </summary>
+            <param name="date">The date</param>
+            <returns>Fiscal quarter index</returns>
+        </member>
+        <member name="M:Reeb.Reporting.FiscalQuarter.GetStartDate(System.Int32,System.Int32)">
+            <summary>
+            Gets the start date of a specific fiscal quarter
+            </summary>
+            <param name="quarter">Quarter index in year</param>
+            <param name="year">Year</param>
+            <returns>The start date of the specified fiscal quarter</returns>
+        </member>
+        <member name="P:Reeb.Reporting.FiscalQuarter.StartDay">
+            <summary>
+            Gets or sets the day of month in which fiscal quarter begins
+            </summary>
+        </member>
+        <member name="P:Reeb.Reporting.FiscalQuarter.StartMonth">
+            <summary>
+            Gets or sets the month in which fiscal quarter begins
+            </summary>
+        </member>
+        <member name="T:Reeb.Reporting.PivotColumn">
+            <summary>
+            Encapsulates a pivot ColumnField
+            </summary>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumn.#ctor">
+            <summary>
+            Creates a new PivotTableItem
+            </summary>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumn.#ctor(System.String,Reeb.SqlOM.SqlDataType)">
+            <summary>
+            Creates a new PivotTableItem
+            </summary>
+            <param name="columnField">Name of the ColumnField</param>
+            <param name="dataType">DataType of the pivot column</param>
+        </member>
+        <member name="P:Reeb.Reporting.PivotColumn.ColumnField">
+            <summary>
+            Gets or sets the ColumnField
+            </summary>
+        </member>
+        <member name="P:Reeb.Reporting.PivotColumn.Values">
+            <summary>
+            Gets the values of this PivotColumn
+            </summary>
+        </member>
+        <member name="P:Reeb.Reporting.PivotColumn.DataType">
+            <summary>
+            Gets or sets the data type of the pivot column
+            </summary>
+        </member>
+        <member name="T:Reeb.Reporting.PivotColumnCollection">
+            <summary>
+            A collection of elements of type PivotColumn
+            </summary>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumnCollection.#ctor">
+            <summary>
+            Initializes a new empty instance of the PivotColumnCollection class.
+            </summary>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumnCollection.#ctor(Reeb.Reporting.PivotColumn[])">
+            <summary>
+            Initializes a new instance of the PivotColumnCollection class, containing elements
+            copied from an array.
+            </summary>
+            <param name="items">
+            The array whose elements are to be added to the new PivotColumnCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumnCollection.#ctor(Reeb.Reporting.PivotColumnCollection)">
+            <summary>
+            Initializes a new instance of the PivotColumnCollection class, containing elements
+            copied from another instance of PivotColumnCollection
+            </summary>
+            <param name="items">
+            The PivotColumnCollection whose elements are to be added to the new PivotColumnCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumnCollection.AddRange(Reeb.Reporting.PivotColumn[])">
+            <summary>
+            Adds the elements of an array to the end of this PivotColumnCollection.
+            </summary>
+            <param name="items">
+            The array whose elements are to be added to the end of this PivotColumnCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumnCollection.AddRange(Reeb.Reporting.PivotColumnCollection)">
+            <summary>
+            Adds the elements of another PivotColumnCollection to the end of this PivotColumnCollection.
+            </summary>
+            <param name="items">
+            The PivotColumnCollection whose elements are to be added to the end of this PivotColumnCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumnCollection.Add(Reeb.Reporting.PivotColumn)">
+            <summary>
+            Adds an instance of type PivotColumn to the end of this PivotColumnCollection.
+            </summary>
+            <param name="value">
+            The PivotColumn to be added to the end of this PivotColumnCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumnCollection.Contains(Reeb.Reporting.PivotColumn)">
+            <summary>
+            Determines whether a specfic PivotColumn value is in this PivotColumnCollection.
+            </summary>
+            <param name="value">
+            The PivotColumn value to locate in this PivotColumnCollection.
+            </param>
+            <returns>
+            true if value is found in this PivotColumnCollection;
+            false otherwise.
+            </returns>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumnCollection.IndexOf(Reeb.Reporting.PivotColumn)">
+            <summary>
+            Return the zero-based index of the first occurrence of a specific value
+            in this PivotColumnCollection
+            </summary>
+            <param name="value">
+            The PivotColumn value to locate in the PivotColumnCollection.
+            </param>
+            <returns>
+            The zero-based index of the first occurrence of the _ELEMENT value if found;
+            -1 otherwise.
+            </returns>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumnCollection.Insert(System.Int32,Reeb.Reporting.PivotColumn)">
+            <summary>
+            Inserts an element into the PivotColumnCollection at the specified index
+            </summary>
+            <param name="index">
+            The index at which the PivotColumn is to be inserted.
+            </param>
+            <param name="value">
+            The PivotColumn to insert.
+            </param>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumnCollection.Remove(Reeb.Reporting.PivotColumn)">
+            <summary>
+            Removes the first occurrence of a specific PivotColumn from this PivotColumnCollection.
+            </summary>
+            <param name="value">
+            The PivotColumn value to remove from this PivotColumnCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumnCollection.GetEnumerator">
+            <summary>
+            Returns an enumerator that can iterate through the elements of this PivotColumnCollection.
+            </summary>
+            <returns>
+            An object that implements System.Collections.IEnumerator.
+            </returns>        
+        </member>
+        <member name="P:Reeb.Reporting.PivotColumnCollection.Item(System.Int32)">
+            <summary>
+            Gets or sets the PivotColumn at the given index in this PivotColumnCollection.
+            </summary>
+        </member>
+        <member name="T:Reeb.Reporting.PivotColumnCollection.Enumerator">
+            <summary>
+            Type-specific enumeration class, used by PivotColumnCollection.GetEnumerator.
+            </summary>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumnCollection.Enumerator.#ctor(Reeb.Reporting.PivotColumnCollection)">
+            <summary>
+            
+            </summary>
+            <param name="collection"></param>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumnCollection.Enumerator.MoveNext">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumnCollection.Enumerator.Reset">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Reeb.Reporting.PivotColumnCollection.Enumerator.Current">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Reeb.Reporting.PivotColumnValue">
+            <summary>
+            Encapsulates a value of a Pivot Column
+            </summary>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumnValue.#ctor">
+            <summary>
+            Creates a new PivotColumnValue
+            </summary>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumnValue.#ctor(System.String)">
+            <summary>
+            Creates a new PivotColumnValue
+            </summary>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumnValue.CreateScalar(System.String,System.Object)">
+            <summary>
+            Creates a new PivotColumnValue with a scalar value
+            </summary>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumnValue.CreateRange(System.String,Reeb.Reporting.Range)">
+            <summary>
+            Creates a new PivotColumnValue with a range value
+            </summary>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumnValue.SetScalarValue(System.Object)">
+            <summary>
+            Sets a scalar value
+            </summary>
+            <param name="val">A value which matches PivotColumn's data type</param>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumnValue.SetRangeValue(Reeb.Reporting.Range)">
+            <summary>
+            Sets a range value
+            </summary>
+            <param name="range"></param>
+        </member>
+        <member name="P:Reeb.Reporting.PivotColumnValue.CrossTabColumnName">
+            <summary>
+            Gets or sets the name of the column in the resulting CrossTab
+            </summary>
+        </member>
+        <member name="T:Reeb.Reporting.PivotColumnValueCollection">
+            <summary>
+            A collection of elements of type PivotColumnValue
+            </summary>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumnValueCollection.#ctor">
+            <summary>
+            Initializes a new empty instance of the PivotColumnValueCollection class.
+            </summary>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumnValueCollection.#ctor(Reeb.Reporting.PivotColumnValue[])">
+            <summary>
+            Initializes a new instance of the PivotColumnValueCollection class, containing elements
+            copied from an array.
+            </summary>
+            <param name="items">
+            The array whose elements are to be added to the new PivotColumnValueCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumnValueCollection.#ctor(Reeb.Reporting.PivotColumnValueCollection)">
+            <summary>
+            Initializes a new instance of the PivotColumnValueCollection class, containing elements
+            copied from another instance of PivotColumnValueCollection
+            </summary>
+            <param name="items">
+            The PivotColumnValueCollection whose elements are to be added to the new PivotColumnValueCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumnValueCollection.AddRange(Reeb.Reporting.PivotColumnValue[])">
+            <summary>
+            Adds the elements of an array to the end of this PivotColumnValueCollection.
+            </summary>
+            <param name="items">
+            The array whose elements are to be added to the end of this PivotColumnValueCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumnValueCollection.AddRange(Reeb.Reporting.PivotColumnValueCollection)">
+            <summary>
+            Adds the elements of another PivotColumnValueCollection to the end of this PivotColumnValueCollection.
+            </summary>
+            <param name="items">
+            The PivotColumnValueCollection whose elements are to be added to the end of this PivotColumnValueCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumnValueCollection.Add(Reeb.Reporting.PivotColumnValue)">
+            <summary>
+            Adds an instance of type PivotColumnValue to the end of this PivotColumnValueCollection.
+            </summary>
+            <param name="value">
+            The PivotColumnValue to be added to the end of this PivotColumnValueCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumnValueCollection.Contains(Reeb.Reporting.PivotColumnValue)">
+            <summary>
+            Determines whether a specfic PivotColumnValue value is in this PivotColumnValueCollection.
+            </summary>
+            <param name="value">
+            The PivotColumnValue value to locate in this PivotColumnValueCollection.
+            </param>
+            <returns>
+            true if value is found in this PivotColumnValueCollection;
+            false otherwise.
+            </returns>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumnValueCollection.IndexOf(Reeb.Reporting.PivotColumnValue)">
+            <summary>
+            Return the zero-based index of the first occurrence of a specific value
+            in this PivotColumnValueCollection
+            </summary>
+            <param name="value">
+            The PivotColumnValue value to locate in the PivotColumnValueCollection.
+            </param>
+            <returns>
+            The zero-based index of the first occurrence of the _ELEMENT value if found;
+            -1 otherwise.
+            </returns>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumnValueCollection.Insert(System.Int32,Reeb.Reporting.PivotColumnValue)">
+            <summary>
+            Inserts an element into the PivotColumnValueCollection at the specified index
+            </summary>
+            <param name="index">
+            The index at which the PivotColumnValue is to be inserted.
+            </param>
+            <param name="value">
+            The PivotColumnValue to insert.
+            </param>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumnValueCollection.Remove(Reeb.Reporting.PivotColumnValue)">
+            <summary>
+            Removes the first occurrence of a specific PivotColumnValue from this PivotColumnValueCollection.
+            </summary>
+            <param name="value">
+            The PivotColumnValue value to remove from this PivotColumnValueCollection.
+            </param>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumnValueCollection.GetEnumerator">
+            <summary>
+            Returns an enumerator that can iterate through the elements of this PivotColumnValueCollection.
+            </summary>
+            <returns>
+            An object that implements System.Collections.IEnumerator.
+            </returns>        
+        </member>
+        <member name="P:Reeb.Reporting.PivotColumnValueCollection.Item(System.Int32)">
+            <summary>
+            Gets or sets the PivotColumnValue at the given index in this PivotColumnValueCollection.
+            </summary>
+        </member>
+        <member name="T:Reeb.Reporting.PivotColumnValueCollection.Enumerator">
+            <summary>
+            Type-specific enumeration class, used by PivotColumnValueCollection.GetEnumerator.
+            </summary>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumnValueCollection.Enumerator.#ctor(Reeb.Reporting.PivotColumnValueCollection)">
+            <summary>
+            
+            </summary>
+            <param name="collection"></param>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumnValueCollection.Enumerator.MoveNext">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Reeb.Reporting.PivotColumnValueCollection.Enumerator.Reset">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Reeb.Reporting.PivotColumnValueCollection.Enumerator.Current">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Reeb.Reporting.PivotTable">
+            <summary>
+            Facilates Pivot Table (Cross-Tab) transformation from relational data
+            </summary>
+            <remarks>
+            Use <see cref="T:Reeb.Reporting.PivotTable"/> class to create Cross-Tab reports.
+            <para>
+            Set <see cref="P:Reeb.Reporting.PivotTable.BaseQuery"/> or <see cref="P:Reeb.Reporting.PivotTable.BaseSql"/> property to SQL 
+            which produces data that needs to be pivoted. Set <see cref="P:Reeb.Reporting.PivotTable.RowField"/> to specify
+            how data should be grouped. Set <see cref="P:Reeb.Reporting.PivotTable.ValueField"/> and <see cref="P:Reeb.Reporting.PivotTable.Function"/> to 
+            specify how the values in the cross tab should be collected. Create at least one 
+            PivotColumn which specifies the data column to pivot on and the which Cross-Tab 
+            columns are to be created.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Reeb.Reporting.PivotTable.#ctor">
+            <summary>
+            Creates a new PivotTable instance
+            </summary>
+        </member>
+        <member name="M:Reeb.Reporting.PivotTable.BuildPivotSql">
+            <summary>
+            Creates a <see cref="T:Reeb.SqlOM.SelectQuery"/> which produces the defined cross tab
+            </summary>
+            <returns>A <see cref="T:Reeb.SqlOM.SelectQuery"/> instance</returns>
+        </member>
+        <member name="M:Reeb.Reporting.PivotTable.BuildDrillDownSql(Reeb.SqlOM.SqlConstant,System.String)">
+            <summary>
+            Creates a <see cref="T:Reeb.SqlOM.SelectQuery"/> which produces drill-down results
+            </summary>
+            <param name="crossTabRowKey">Value identifying cross-tab's row</param>
+            <param name="crossTabColumnName">Name of a cross-tab column</param>
+            <returns>A <see cref="T:Reeb.SqlOM.SelectQuery"/> which produces drill-down results of the specified cross-tab cell</returns>
+        </member>
+        <member name="P:Reeb.Reporting.PivotTable.ValueField">
+            <summary>
+            Gets or sets the ValueField
+            </summary>
+        </member>
+        <member name="P:Reeb.Reporting.PivotTable.RowField">
+            <summary>
+            Gets or sets the RowField name
+            </summary>
+        </member>
+        <member name="P:Reeb.Reporting.PivotTable.Function">
+            <summary>
+            Gets or sets the function to be performed on ValueField
+            </summary>
+        </member>
+        <member name="P:Reeb.Reporting.PivotTable.Columns">
+            <summary>
+            Gets the collection of PivotColumn objects
+            </summary>
+        </member>
+        <member name="P:Reeb.Reporting.PivotTable.WithIsTotal">
+            <summary>
+            Gets or sets wheather IsTotal column should be added
+            </summary>
+            <remarks>
+            When <see cref="P:Reeb.Reporting.PivotTable.WithIsTotal"/> is true, an additional column called "IsTotal"
+            will be added to the result set. Value of 1 in the column indicates that the row
+            is a total row.
+            </remarks>
+        </member>
+        <member name="P:Reeb.Reporting.PivotTable.WithTotal">
+            <summary>
+            Gets or sets wheather totals should be calculated.
+            </summary>
+        </member>
+        <member name="P:Reeb.Reporting.PivotTable.IsTotalColumnName">
+            <summary>
+            Gets or sets the name of the column which indicates weather the row is a total summary row.
+            </summary>
+        </member>
+        <member name="P:Reeb.Reporting.PivotTable.BaseQuery">
+            <summary>
+            Gets or sets the base query as a SelectQuery object
+            </summary>
+            <remarks>
+            The <see cref="P:Reeb.Reporting.PivotTable.BaseQuery"/> and <see cref="P:Reeb.Reporting.PivotTable.BaseSql"/> are mutually exclusive.
+            </remarks>
+        </member>
+        <member name="P:Reeb.Reporting.PivotTable.BaseSql">
+            <summary>
+            Gets or sets the base query as a SQL string
+            </summary>
+        </member>
+        <member name="T:Reeb.Reporting.Range">
+            <summary>
+            Encapsulates a single interval
+            </summary>
+        </member>
+        <member name="M:Reeb.Reporting.Range.#ctor">
+            <summary>
+            Creates a new DataRangeItem
+            </summary>
+        </member>
+        <member name="M:Reeb.Reporting.Range.#ctor(System.Object,System.Object)">
+            <summary>
+            Creates a new DataRangeItem
+            </summary>
+            <param name="low">The low bound of the interval</param>
+            <param name="high">The high bound of the interval</param>
+        </member>
+        <member name="P:Reeb.Reporting.Range.LowBound">
+            <summary>
+            Gets or sets the low bound of the interval
+            </summary>
+        </member>
+        <member name="P:Reeb.Reporting.Range.HighBound">
+            <summary>
+            Gets or sets the high bound of the interval
+            </summary>
+        </member>
+        <member name="T:Reeb.Reporting.TimePeriodType">
+            <summary>
+            Determines the kind of a time period
+            </summary>
+        </member>
+        <member name="F:Reeb.Reporting.TimePeriodType.Day">
+            <summary>Days</summary>
+        </member>
+        <member name="F:Reeb.Reporting.TimePeriodType.Week">
+            <summary>Weeks</summary>
+        </member>
+        <member name="F:Reeb.Reporting.TimePeriodType.Month">
+            <summary>Months</summary>
+        </member>
+        <member name="F:Reeb.Reporting.TimePeriodType.FiscalQuarter">
+            <summary>Fiscal quarters (see <see cref="F:Reeb.Reporting.TimePeriodType.FiscalQuarter"/>)</summary>
+        </member>
+        <member name="F:Reeb.Reporting.TimePeriodType.CalendarQuarter">
+            <summary>Calendar quarters</summary>
+        </member>
+        <member name="F:Reeb.Reporting.TimePeriodType.Year">
+            <summary>Years</summary>
+        </member>
+        <member name="T:Reeb.Reporting.TimePeriod">
+            <summary>
+            Encapsulates a time period.
+            </summary>
+            <remarks>
+            Use the <see cref="T:Reeb.Reporting.TimePeriod"/> class to make calculations in terms of days, weeks, months, quarters or years.
+            </remarks>
+        </member>
+        <member name="M:Reeb.Reporting.TimePeriod.Add(System.Int32)">
+            <summary>
+            Adds or sutracts time periods
+            </summary>
+            <param name="count">The number of periods of the same time to add</param>
+            <returns>The resulting TimePeriod</returns>
+            <remarks>Use negative <paramref name="count"/> values to substract periods</remarks>
+        </member>
+        <member name="M:Reeb.Reporting.TimePeriod.GetDifference(Reeb.Reporting.TimePeriod,Reeb.Reporting.TimePeriod)">
+            <summary>
+            Returns the difference in periods between two TimePeriods
+            </summary>
+            <param name="from"></param>
+            <param name="to"></param>
+            <returns>The difference in number of periods</returns>
+            <remarks>The types if both periods must be the same.</remarks>
+        </member>
+        <member name="M:Reeb.Reporting.TimePeriod.GetDifferenceInMonths(System.DateTime,System.DateTime)">
+            <summary>
+            Gets the difference in months between two TimePeriod
+            </summary>
+            <param name="from"></param>
+            <param name="to"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Reeb.Reporting.TimePeriod.OffsetFromToday">
+            <summary>
+            Returns the difference in periods between today's period and self
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Reeb.Reporting.TimePeriod.GetIndexInYear">
+            <summary>
+            Returns the index in year of this TimePeriod
+            </summary>
+            <returns></returns>
+            <remarks>The index is zero based.</remarks>
+        </member>
+        <member name="M:Reeb.Reporting.TimePeriod.Add(Reeb.Reporting.TimePeriodType,System.Int32)">
+            <summary>
+            Adds or subtract a number of periods of a specified type
+            </summary>
+            <param name="addPeriodType">Type of period to add</param>
+            <param name="addValue">The number of periods to add</param>
+            <returns>DateTime value which is the result of the addition</returns>
+            <remarks>Use negative <paramref name="values"/> to substract.</remarks>
+        </member>
+        <member name="M:Reeb.Reporting.TimePeriod.FromDate(Reeb.Reporting.TimePeriodType,System.DateTime)">
+            <summary>
+            Create a time period based on a specified date.
+            </summary>
+            <param name="type">The type of the TimePeriod to create</param>
+            <param name="date">Any date which falls into the desired period</param>
+            <returns>New TimePeriod instance</returns>
+        </member>
+        <member name="M:Reeb.Reporting.TimePeriod.FromToday(Reeb.Reporting.TimePeriodType)">
+            <summary>
+            Creates a new TimePeriod based on today's date.
+            </summary>
+            <param name="type">The type of the TimePeriod to create</param>
+            <returns>A new TimePeriod instance</returns>
+        </member>
+        <member name="M:Reeb.Reporting.TimePeriod.Serialize">
+            <summary>
+            Serializes this TimePeriod into a string
+            </summary>
+            <returns>String representation of this TimePeriod</returns>
+            <remarks>Returns a string which can be understood by Parse</remarks>
+        </member>
+        <member name="M:Reeb.Reporting.TimePeriod.Parse(System.String)">
+            <summary>
+            Creates a time period from a string.
+            </summary>
+            <param name="periodString"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Reeb.Reporting.TimePeriod.ToString">
+            <summary>
+            Returns a human readable representation of TimePeriod
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Reeb.Reporting.TimePeriod.PeriodStartDate">
+            <summary>
+            Returns the start date of this TimePeriod
+            </summary>
+        </member>
+        <member name="P:Reeb.Reporting.TimePeriod.PeriodType">
+            <summary>
+            Returns the type of this TimePeriod
+            </summary>
+        </member>
+    </members>
+</doc>
